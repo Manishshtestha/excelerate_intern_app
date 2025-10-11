@@ -70,6 +70,7 @@ For more details on the user journey, refer to the [User Journey Guide](docs/use
 - [Atif Shaif](https://github.com/atifs899)
 - [Lungile Mawila](https://github.com/LungstarCode)
 - [Manish Shrestha](https://github.com/ManishShtestha)
+- [Tanzila Ahmmed Shoronika](https://github.com/shoronika)
 - [Vedaang Sharma](https://github.com/gtathelegend)
 
 
