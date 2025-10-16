@@ -5,7 +5,7 @@ class ElevatedBtn extends StatelessWidget {
   final VoidCallback onPressed;
   final Color color;
   final Color textColor;
-  final double borderRadius;
+  final double borderRadius; 
   final double padding;
 
   const ElevatedBtn({
