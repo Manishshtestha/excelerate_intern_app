@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-class InputField extends StatefulWidget {
+class InputField extends StatefulWidget { 
   final String label;
   final String hint;
   final IconData? icon;
