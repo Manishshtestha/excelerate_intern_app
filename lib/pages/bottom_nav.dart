@@ -1,6 +1,7 @@
-import 'package:excelerate_intern_app/pages/catalog.dart';
-import 'package:excelerate_intern_app/pages/profile.dart';
-import 'package:excelerate_intern_app/pages/progress.dart';
+
+import 'package:excelerate_intern_app/pages/catalog_page.dart';
+import 'package:excelerate_intern_app/pages/profile_page.dart';
+import 'package:excelerate_intern_app/pages/progress_page.dart';
 import 'package:flutter/material.dart';
 
 class BottomNav extends StatefulWidget {
