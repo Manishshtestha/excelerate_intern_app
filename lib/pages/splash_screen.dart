@@ -1,6 +1,6 @@
 import 'dart:async';
 import 'dart:math';
-import 'package:excelerate_intern_app/main.dart';
+import 'package:excelerate_intern_app/pages/login.dart';
 import 'package:flutter/material.dart';
 
 
@@ -38,7 +38,7 @@ class _SplashScreenState extends State<SplashScreen>
           Navigator.of(context).pushReplacement(
             PageRouteBuilder(
               pageBuilder: (context, animation, secondaryAnimation) =>
-                  const MyApp(),
+                  LoginPage(),
               transitionsBuilder:
                   (context, animation, secondaryAnimation, child) {
                 final fade = CurvedAnimation(
