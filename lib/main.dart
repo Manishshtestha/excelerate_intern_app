@@ -5,7 +5,7 @@ import 'package:excelerate_intern_app/pages/profile_page.dart';
 import 'package:excelerate_intern_app/pages/progress_page.dart';
 import 'package:excelerate_intern_app/pages/register.dart';
 import 'package:excelerate_intern_app/pages/splash_screen.dart';
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart'; 
 
 void main() {
   runApp(MyApp());
