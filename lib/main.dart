@@ -5,6 +5,7 @@ import 'package:excelerate_intern_app/pages/progress.dart';
 import 'package:excelerate_intern_app/pages/register.dart';
 import 'package:excelerate_intern_app/pages/splash_screen.dart';
 import 'package:excelerate_intern_app/pages/catalog.dart';
+import 'package:excelerate_intern_app/theme.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -17,6 +18,9 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      theme: excelerateLightTheme,
+      darkTheme: excelerateDarkTheme,
+      themeMode: ThemeMode.system, // auto-switches by system
       home: SplashScreen(),
       debugShowCheckedModeBanner: false,
       routes: {
