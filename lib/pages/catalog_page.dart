@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:excelerate_intern_app/widgets/course_card.dart';
+import 'package:excelerate_intern_app/pages/course_detail_page.dart';
 
 class CatalogPage extends StatefulWidget {
   const CatalogPage({super.key});
@@ -21,7 +22,7 @@ class _CatalogPageState extends State<CatalogPage> {
           'https://d2ms8rpfqc4h24.cloudfront.net/What_is_Flutter_f648a606af.png',
       'status': 'In Progress',
       'category': 'Mobile',
-      'featured': true,
+      'mentor': 'John Doe',
     },
     {
       'title': 'Dart Fundamentals',
@@ -30,7 +31,7 @@ class _CatalogPageState extends State<CatalogPage> {
           'https://swansoftwaresolutions.com/wp-content/uploads/2020/02/08.20.20-What-is-Dart-and-how-is-it-used-1.jpg',
       'status': 'Complete',
       'category': 'Mobile',
-      'featured': true,
+      'mentor': 'Alicia Decker',
     },
     {
       'title': 'Python Basics',
@@ -39,7 +40,7 @@ class _CatalogPageState extends State<CatalogPage> {
           'https://4kwallpapers.com/images/wallpapers/python-programming-3840x2160-16102.jpg',
       'status': 'In Progress',
       'category': 'Backend',
-      'featured': true,
+      'mentor': 'Jane Smith',
     },
     {
       'title': 'HTML & CSS',
@@ -47,7 +48,7 @@ class _CatalogPageState extends State<CatalogPage> {
       'ImgURL': 'https://img-c.udemycdn.com/course/750x422/5852582_cafb_3.jpg',
       'status': 'Upcoming',
       'category': 'Frontend',
-      'featured': false,
+      'mentor': 'Andrew Wilson',
     },
     {
       'title': 'Node.js Essentials',
@@ -56,7 +57,7 @@ class _CatalogPageState extends State<CatalogPage> {
           'https://images.ctfassets.net/aq13lwl6616q/7cS8gBoWulxkWNWEm0FspJ/c7eb42dd82e27279307f8b9fc9b136fa/nodejs_cover_photo_smaller_size.png?w=500&fm=webp',
       'status': 'In Progress',
       'category': 'Backend',
-      'featured': false,
+      'mentor': 'Brian Lee',
     },
   ];
 
@@ -99,13 +100,30 @@ class _CatalogPageState extends State<CatalogPage> {
                       child: TextField(
                         autofocus: true,
                         decoration: InputDecoration(
-                          labelText: 'Search Courses',
+                          // labelText: 'Search Courses',
                           hintText: 'Search...',
                           prefixIcon: const Icon(Icons.search),
+                          suffixIcon: IconButton(
+                            icon: const Icon(Icons.clear),
+                            onPressed: () {
+                              setState(() {
+                                searchQuery = '';
+                                visibleSearch = false;
+                              });
+                            },
+                          ),
                           border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(8),
+                            borderRadius: BorderRadius.circular(12),
+                            borderSide: const BorderSide(
+                              color: Color(0xFF6A5ACD),
+                            ), // Optional custom color
+                          ),
+                          contentPadding: const EdgeInsets.symmetric(
+                            vertical: 12,
+                            horizontal: 16,
                           ),
                         ),
+
                         onChanged: (value) =>
                             setState(() => searchQuery = value),
                       ),
@@ -113,44 +131,70 @@ class _CatalogPageState extends State<CatalogPage> {
                   : const SizedBox(height: 20, key: ValueKey('emptySpace')),
             ),
             const SizedBox(height: 10),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16),
-              child: Align(
-                alignment: Alignment.centerLeft,
-                child: Text(
-                  'Featured Courses',
-                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.w400),
-                ),
-              ),
-            ),
-            SingleChildScrollView(
-              scrollDirection: Axis.horizontal,
-              child: Padding(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 16,
-                  vertical: 10,
-                ),
-                child: Row(
-                  children: [
-                    for (var course in allCourses)
-                      Padding(
-                        padding: const EdgeInsets.only(right: 12, bottom: 10),
-                        child: SizedBox(
-                          height: 200,
-                          child: CourseCard(
-                            title: course['title'] as String,
-                            subtitle: course['subtitle'] as String,
-                            imageUrl: course['ImgURL'] as String,
-                            isVerticalLayout: true,
-                            onTap: () => print('Tapped: ${course['title']}'),
-                          ),
+            if(searchQuery.isEmpty) 
+            Column(children: [
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16),
+                    child: Align(
+                      alignment: Alignment.centerLeft,
+                      child: Text(
+                        'Featured Courses',
+                        style: TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.w400,
                         ),
                       ),
-                  ],
-                ),
-              ),
-            ),
+                    ),
+                  ),
 
+                  SingleChildScrollView(
+                    scrollDirection: Axis.horizontal,
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 16,
+                        vertical: 10,
+                      ),
+                      child: Row(
+                        children: [
+                          for (var course in allCourses)
+                            Padding(
+                              padding: const EdgeInsets.only(
+                                right: 12,
+                                bottom: 10,
+                              ),
+                              child: SizedBox(
+                                height: 200,
+                                child: CourseCard(
+                                  title: course['title'] as String,
+                                  subtitle: course['subtitle'] as String,
+                                  imageUrl: course['ImgURL'] as String,
+                                  isVerticalLayout: true,
+                                  onTap: () {
+                                    Navigator.of(context).push(
+                                      PageRouteBuilder(
+                                        transitionDuration: const Duration(
+                                          milliseconds: 350,
+                                        ),
+                                        pageBuilder: (_, __, ___) =>
+                                            CourseDetailPage(course: course),
+                                        transitionsBuilder:
+                                            (_, animation, __, child) =>
+                                                FadeTransition(
+                                                  opacity: animation,
+                                                  child: child,
+                                                ),
+                                      ),
+                                    );
+                                  },
+                                ),
+                              ),
+                            ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ],)
+            else const SizedBox.shrink(),
             Container(
               height: 40,
               padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -208,7 +252,23 @@ class _CatalogPageState extends State<CatalogPage> {
                               subtitle: course['subtitle'] as String,
                               imageUrl: course['ImgURL'] as String,
                               isVerticalLayout: false,
-                              onTap: () => print('Tapped: ${course['title']}'),
+                              onTap: () {
+                                Navigator.of(context).push(
+                                  PageRouteBuilder(
+                                    transitionDuration: const Duration(
+                                      milliseconds: 350,
+                                    ),
+                                    pageBuilder: (_, __, ___) =>
+                                        CourseDetailPage(course: course),
+                                    transitionsBuilder:
+                                        (_, animation, __, child) =>
+                                            FadeTransition(
+                                              opacity: animation,
+                                              child: child,
+                                            ),
+                                  ),
+                                );
+                              },
                             ),
                           ),
                         ),
