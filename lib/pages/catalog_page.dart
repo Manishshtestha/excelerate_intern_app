@@ -23,6 +23,19 @@ class _CatalogPageState extends State<CatalogPage> {
       'status': 'In Progress',
       'category': 'Mobile',
       'mentor': 'John Doe',
+      'modules': {
+        'Introduction': 'Completed',
+        'Widgets': 'In Progress',
+        'State Management': 'Not Started',
+      },
+      'description':
+          'This course covers the basics of Flutter development, including widgets, layouts, and state management.',
+      'comments': [
+        {
+          'user': 'Alice',
+          'comment': 'Great course! Really enjoying the content so far.',
+        },
+      ],
     },
     {
       'title': 'Dart Fundamentals',
@@ -32,6 +45,20 @@ class _CatalogPageState extends State<CatalogPage> {
       'status': 'Complete',
       'category': 'Mobile',
       'mentor': 'Alicia Decker',
+      'modules': {
+        'Syntax and Basics': 'Completed',
+        'OOP in Dart': 'Completed',
+        'Asynchronous Programming': 'Completed',
+      },
+      'description':
+          'Learn the fundamentals of Dart programming language, which is essential for Flutter development.',
+      'comments': [
+        {
+          'user': 'Bob',
+          'comment':
+              'The Dart course was very informative and well-structured.',
+        },
+      ],
     },
     {
       'title': 'Python Basics',
@@ -41,6 +68,19 @@ class _CatalogPageState extends State<CatalogPage> {
       'status': 'In Progress',
       'category': 'Backend',
       'mentor': 'Jane Smith',
+      'modules': {
+        'Introduction to Python': 'Completed',
+        'Data Structures': 'In Progress',
+        'Functions and Modules': 'Not Started',
+      },
+      'description':
+          'This course introduces the basics of Python programming, covering syntax, data structures, and functions.',
+      'comments': [
+        {
+          'user': 'Charlie',
+          'comment': 'Python is such a versatile language. Loving the course!',
+        },
+      ],
     },
     {
       'title': 'HTML & CSS',
@@ -49,6 +89,14 @@ class _CatalogPageState extends State<CatalogPage> {
       'status': 'Upcoming',
       'category': 'Frontend',
       'mentor': 'Andrew Wilson',
+      'modules': {
+        'HTML Basics': 'Not Started',
+        'CSS Fundamentals': 'Not Started',
+        'Responsive Design': 'Not Started',
+      },
+      'description':
+          'Learn how to create stunning web pages using HTML and CSS, covering everything from basic tags to advanced styling techniques.',
+      'comments': [],
     },
     {
       'title': 'Node.js Essentials',
@@ -58,6 +106,20 @@ class _CatalogPageState extends State<CatalogPage> {
       'status': 'In Progress',
       'category': 'Backend',
       'mentor': 'Brian Lee',
+      'modules': {
+        'Getting Started with Node.js': 'Completed',
+        'Working with Express': 'In Progress',
+        'Database Integration': 'Not Started',
+      },
+      'description':
+          'This course covers the essentials of backend development using Node.js, including server setup, routing, and database integration.',
+      'comments': [
+        {
+          'user': 'Diana',
+          'comment':
+              'Node.js course is very practical and hands-on. Loving it!',
+        },
+      ],
     },
   ];
 
@@ -131,8 +193,9 @@ class _CatalogPageState extends State<CatalogPage> {
                   : const SizedBox(height: 20, key: ValueKey('emptySpace')),
             ),
             const SizedBox(height: 10),
-            if(searchQuery.isEmpty) 
-            Column(children: [
+            if (searchQuery.isEmpty)
+              Column(
+                children: [
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 16),
                     child: Align(
@@ -193,8 +256,10 @@ class _CatalogPageState extends State<CatalogPage> {
                       ),
                     ),
                   ),
-                ],)
-            else const SizedBox.shrink(),
+                ],
+              )
+            else
+              const SizedBox.shrink(),
             Container(
               height: 40,
               padding: const EdgeInsets.symmetric(horizontal: 16),
