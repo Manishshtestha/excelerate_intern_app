@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:excelerate_intern_app/widgets/course_card.dart';
-import 'package:excelerate_intern_app/pages/course_detail_page.dart';
+import 'package:excelerate_intern_app/pages/CourseDetailPage.dart';
 
 class CatalogPage extends StatefulWidget {
   const CatalogPage({super.key});
@@ -239,7 +239,7 @@ class _CatalogPageState extends State<CatalogPage> {
                                           milliseconds: 350,
                                         ),
                                         pageBuilder: (_, __, ___) =>
-                                            CourseDetailPage(course: course),
+                                            CourseDetailPage(course: course,),
                                         transitionsBuilder:
                                             (_, animation, __, child) =>
                                                 FadeTransition(
@@ -324,7 +324,7 @@ class _CatalogPageState extends State<CatalogPage> {
                                       milliseconds: 350,
                                     ),
                                     pageBuilder: (_, __, ___) =>
-                                        CourseDetailPage(course: course),
+                                        CourseDetailPage(course: course,),
                                     transitionsBuilder:
                                         (_, animation, __, child) =>
                                             FadeTransition(

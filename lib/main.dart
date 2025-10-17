@@ -1,5 +1,6 @@
 import 'package:excelerate_intern_app/pages/bottom_nav.dart';
 import 'package:excelerate_intern_app/pages/catalog_page.dart';
+import 'package:excelerate_intern_app/pages/feedback_page.dart';
 import 'package:excelerate_intern_app/pages/login.dart';
 import 'package:excelerate_intern_app/pages/profile_page.dart';
 import 'package:excelerate_intern_app/pages/progress_page.dart';
@@ -26,6 +27,7 @@ class MyApp extends StatelessWidget {
         '/catalog':(context) => CatalogPage(),  
         '/progress':(context) => ProgressPage(),
         '/profile':(context)=> ProfilePage(),
+
       },
     );
   }

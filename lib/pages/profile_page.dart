@@ -24,7 +24,9 @@ class _ProfilePageState extends State<ProfilePage> {
             },
             itemBuilder: (context) => [
               PopupMenuItem(value: 'settings', child: Text('Settings')),
-              PopupMenuItem(value: 'logout', child: Text('Logout')),
+              PopupMenuItem(value: 'logout', child: Text('Logout'),onTap: (){
+                Navigator.pushReplacementNamed(context, '/login');
+              },),
             ],
           ),
         ],
@@ -83,6 +85,7 @@ class _ProfilePageState extends State<ProfilePage> {
                 );
               },
             ),
+
           ],
         ),
       ),
