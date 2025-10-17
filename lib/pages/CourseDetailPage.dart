@@ -54,7 +54,8 @@ class _CourseDetailPageState extends State<CourseDetailPage> {
                           Colors.transparent,
                           Colors.black.withOpacity(0.7),
                         ],
-                      ),
+                     ),
+
                     ),
                   ),
                 ],
@@ -416,48 +417,8 @@ class _CourseDetailPageState extends State<CourseDetailPage> {
       ),
     );
   }
-
-  void _showAddCommentDialog() {
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: const Text('Add Your Feedback'),
-        content: TextField(
-          controller: _commentController,
-          maxLines: 4,
-          decoration: InputDecoration(
-            hintText: 'Share your thoughts about this course...',
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(12),
-            ),
-          ),
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text('Cancel'),
-          ),
-          ElevatedButton(
-            onPressed: () {
-              if (_commentController.text.isNotEmpty) {
-                // Add comment logic here
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text('Comment added!')),
-                );
-                _commentController.clear();
-                Navigator.pop(context);
-              }
-            },
-            child: const Text('Submit'),
-          ),
-        ],
-      ),
-    );
-  }
-
   Color _getStatusColor(String status) {
     switch (status) {
-      case 'Completed':
       case 'Complete':
         return Colors.green;
       case 'In Progress':
@@ -473,7 +434,6 @@ class _CourseDetailPageState extends State<CourseDetailPage> {
 
   IconData _getModuleIcon(String status) {
     switch (status) {
-      case 'Completed':
       case 'Complete':
         return Icons.check_circle;
       case 'In Progress':
