@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 
+// Feedback screen for a specific course — lets users rate and review
 class FeedbackScreen extends StatefulWidget {
-  final String courseTitle;
-  final String? courseMentor;
+  final String courseTitle; // Title of the course being reviewed
+  final String? courseMentor; // Optional course instructor name
 
   const FeedbackScreen({
     super.key,
@@ -15,10 +16,11 @@ class FeedbackScreen extends StatefulWidget {
 }
 
 class _FeedbackScreenState extends State<FeedbackScreen> {
-  int selectedRating = 0;
-  final TextEditingController _feedbackController = TextEditingController();
-  String selectedCategory = 'Course Content';
+  int selectedRating = 0; // Stores the selected star rating (1–5)
+  final TextEditingController _feedbackController = TextEditingController(); // Controller for feedback text input
+  String selectedCategory = 'Course Content'; // Default feedback category
 
+  // List of predefined feedback categories
   final List<String> feedbackCategories = [
     'Course Content',
     'Instructor',
@@ -28,7 +30,7 @@ class _FeedbackScreenState extends State<FeedbackScreen> {
     'Other',
   ];
 
-  // Mock previous feedback data
+  // Mock feedback data — can be replaced by API or database data
   final List<Map<String, dynamic>> previousFeedback = [
     {
       'user': 'Sarah Johnson',
@@ -55,6 +57,7 @@ class _FeedbackScreenState extends State<FeedbackScreen> {
 
   @override
   void dispose() {
+    // Clean up text controller when the widget is disposed
     _feedbackController.dispose();
     super.dispose();
   }
@@ -72,7 +75,7 @@ class _FeedbackScreenState extends State<FeedbackScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // Course Info Card
+              // --- Course Info Header ---
               Container(
                 padding: const EdgeInsets.all(16),
                 decoration: BoxDecoration(
@@ -102,6 +105,7 @@ class _FeedbackScreenState extends State<FeedbackScreen> {
                         fontSize: 16,
                       ),
                     ),
+                    // Show mentor info if available
                     if (widget.courseMentor != null) ...[
                       const SizedBox(height: 4),
                       Text(
@@ -118,15 +122,14 @@ class _FeedbackScreenState extends State<FeedbackScreen> {
 
               const SizedBox(height: 24),
 
-              // Rating Section
+              // --- Rating Section ---
               const Text(
                 'Rate this course',
-                style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                ),
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
               ),
               const SizedBox(height: 12),
+
+              // 5-star rating row
               Center(
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -134,7 +137,7 @@ class _FeedbackScreenState extends State<FeedbackScreen> {
                     return GestureDetector(
                       onTap: () {
                         setState(() {
-                          selectedRating = index + 1;
+                          selectedRating = index + 1; // Update rating
                         });
                       },
                       child: Padding(
@@ -151,6 +154,8 @@ class _FeedbackScreenState extends State<FeedbackScreen> {
                   }),
                 ),
               ),
+
+              // Rating label (e.g., “Excellent!”, “Good”)
               if (selectedRating > 0) ...[
                 const SizedBox(height: 8),
                 Center(
@@ -167,15 +172,14 @@ class _FeedbackScreenState extends State<FeedbackScreen> {
 
               const SizedBox(height: 24),
 
-              // Feedback Category
+              // --- Feedback Category Section ---
               const Text(
                 'Feedback Category',
-                style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                ),
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
               ),
               const SizedBox(height: 12),
+
+              // Category chips (horizontal wrapping list)
               Wrap(
                 spacing: 8,
                 runSpacing: 8,
@@ -196,7 +200,7 @@ class _FeedbackScreenState extends State<FeedbackScreen> {
                     labelStyle: TextStyle(
                       color: isSelected ? Colors.blue[700] : Colors.grey[700],
                       fontWeight:
-                      isSelected ? FontWeight.w600 : FontWeight.normal,
+                          isSelected ? FontWeight.w600 : FontWeight.normal,
                     ),
                   );
                 }).toList(),
@@ -204,13 +208,10 @@ class _FeedbackScreenState extends State<FeedbackScreen> {
 
               const SizedBox(height: 24),
 
-              // Feedback Text Area
+              // --- Feedback Text Field ---
               const Text(
                 'Your Feedback',
-                style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                ),
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
               ),
               const SizedBox(height: 12),
               TextField(
@@ -229,7 +230,7 @@ class _FeedbackScreenState extends State<FeedbackScreen> {
 
               const SizedBox(height: 24),
 
-              // Submit Button
+              // --- Submit Button ---
               SizedBox(
                 width: double.infinity,
                 height: 50,
@@ -240,43 +241,34 @@ class _FeedbackScreenState extends State<FeedbackScreen> {
                       borderRadius: BorderRadius.circular(12),
                     ),
                   ),
-                  onPressed: _submitFeedback,
+                  onPressed: _submitFeedback, // Submit feedback handler
                   child: const Text(
                     'Submit Feedback',
                     style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white,
-                    ),
+                      fontSize: 16, fontWeight: FontWeight.bold, color: Colors.white),
                   ),
                 ),
               ),
 
               const SizedBox(height: 32),
 
-              // Previous Feedback Section
+              // --- Reviews Summary Header ---
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   const Text(
                     'Student Reviews',
-                    style: TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                    ),
+                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                   ),
                   Text(
                     '${previousFeedback.length} reviews',
-                    style: TextStyle(
-                      fontSize: 14,
-                      color: Colors.grey[600],
-                    ),
+                    style: TextStyle(fontSize: 14, color: Colors.grey[600]),
                   ),
                 ],
               ),
               const SizedBox(height: 12),
 
-              // Average Rating Summary
+              // --- Rating Summary Overview ---
               Container(
                 padding: const EdgeInsets.all(16),
                 decoration: BoxDecoration(
@@ -286,6 +278,7 @@ class _FeedbackScreenState extends State<FeedbackScreen> {
                 ),
                 child: Row(
                   children: [
+                    // Average rating score
                     Column(
                       children: [
                         const Text(
@@ -307,6 +300,8 @@ class _FeedbackScreenState extends State<FeedbackScreen> {
                       ],
                     ),
                     const SizedBox(width: 24),
+
+                    // Rating bar distribution
                     Expanded(
                       child: Column(
                         children: [
@@ -324,7 +319,7 @@ class _FeedbackScreenState extends State<FeedbackScreen> {
 
               const SizedBox(height: 16),
 
-              // Individual Reviews
+              // --- Display Individual Feedback Cards ---
               ...previousFeedback.map((feedback) {
                 return _buildFeedbackCard(feedback);
               }).toList(),
@@ -337,15 +332,13 @@ class _FeedbackScreenState extends State<FeedbackScreen> {
     );
   }
 
+  // Builds a single rating bar (used in summary)
   Widget _buildRatingBar(int stars, double percentage) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 2),
       child: Row(
         children: [
-          Text(
-            '$stars',
-            style: const TextStyle(fontSize: 12),
-          ),
+          Text('$stars', style: const TextStyle(fontSize: 12)),
           const SizedBox(width: 4),
           Icon(Icons.star, size: 12, color: Colors.amber[700]),
           const SizedBox(width: 8),
@@ -361,15 +354,14 @@ class _FeedbackScreenState extends State<FeedbackScreen> {
             ),
           ),
           const SizedBox(width: 8),
-          Text(
-            '${(percentage * 100).toInt()}%',
-            style: const TextStyle(fontSize: 11),
-          ),
+          Text('${(percentage * 100).toInt()}%',
+              style: const TextStyle(fontSize: 11)),
         ],
       ),
     );
   }
 
+  // Builds a card for each feedback item
   Widget _buildFeedbackCard(Map<String, dynamic> feedback) {
     return Container(
       margin: const EdgeInsets.only(bottom: 12),
@@ -389,18 +381,16 @@ class _FeedbackScreenState extends State<FeedbackScreen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          // Reviewer info + rating
           Row(
             children: [
               CircleAvatar(
                 radius: 20,
                 backgroundColor: Colors.blue[100],
                 child: Text(
-                  feedback['user'][0],
+                  feedback['user'][0], // First letter of name
                   style: const TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.blue,
-                  ),
+                    fontSize: 16, fontWeight: FontWeight.bold, color: Colors.blue),
                 ),
               ),
               const SizedBox(width: 12),
@@ -408,23 +398,15 @@ class _FeedbackScreenState extends State<FeedbackScreen> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
-                      feedback['user'],
-                      style: const TextStyle(
-                        fontWeight: FontWeight.w600,
-                        fontSize: 15,
-                      ),
-                    ),
-                    Text(
-                      feedback['date'],
-                      style: TextStyle(
-                        fontSize: 12,
-                        color: Colors.grey[600],
-                      ),
-                    ),
+                    Text(feedback['user'],
+                        style: const TextStyle(
+                          fontWeight: FontWeight.w600, fontSize: 15)),
+                    Text(feedback['date'],
+                        style: TextStyle(fontSize: 12, color: Colors.grey[600])),
                   ],
                 ),
               ),
+              // Rating badge
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                 decoration: BoxDecoration(
@@ -433,11 +415,7 @@ class _FeedbackScreenState extends State<FeedbackScreen> {
                 ),
                 child: Row(
                   children: [
-                    Icon(
-                      Icons.star,
-                      size: 14,
-                      color: Colors.amber[700],
-                    ),
+                    Icon(Icons.star, size: 14, color: Colors.amber[700]),
                     const SizedBox(width: 4),
                     Text(
                       '${feedback['rating']}',
@@ -452,7 +430,10 @@ class _FeedbackScreenState extends State<FeedbackScreen> {
               ),
             ],
           ),
+
           const SizedBox(height: 12),
+
+          // Category tag
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
             decoration: BoxDecoration(
@@ -461,13 +442,13 @@ class _FeedbackScreenState extends State<FeedbackScreen> {
             ),
             child: Text(
               feedback['category'],
-              style: TextStyle(
-                fontSize: 11,
-                color: Colors.grey[700],
-              ),
+              style: TextStyle(fontSize: 11, color: Colors.grey[700]),
             ),
           ),
+
           const SizedBox(height: 8),
+
+          // Feedback comment text
           Text(
             feedback['comment'],
             style: TextStyle(
@@ -476,7 +457,10 @@ class _FeedbackScreenState extends State<FeedbackScreen> {
               height: 1.5,
             ),
           ),
+
           const SizedBox(height: 12),
+
+          // Helpful / Reply buttons
           Row(
             children: [
               TextButton.icon(
@@ -504,6 +488,7 @@ class _FeedbackScreenState extends State<FeedbackScreen> {
     );
   }
 
+  // Returns descriptive text based on star rating
   String _getRatingText(int rating) {
     switch (rating) {
       case 5:
@@ -521,7 +506,9 @@ class _FeedbackScreenState extends State<FeedbackScreen> {
     }
   }
 
+  // Handles feedback submission validation and success message
   void _submitFeedback() {
+    // Validation: ensure rating and text are provided
     if (selectedRating == 0) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
@@ -542,7 +529,7 @@ class _FeedbackScreenState extends State<FeedbackScreen> {
       return;
     }
 
-    // Show success message
+    // Success confirmation message
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(
         content: Text('Thank you for your feedback!'),
@@ -551,18 +538,16 @@ class _FeedbackScreenState extends State<FeedbackScreen> {
       ),
     );
 
-    // Clear form
+    // Reset form state
     setState(() {
       selectedRating = 0;
       selectedCategory = 'Course Content';
       _feedbackController.clear();
     });
 
-    // Navigate back after a delay
+    // Return to previous screen after short delay
     Future.delayed(const Duration(seconds: 2), () {
-      if (mounted) {
-        Navigator.pop(context);
-      }
+      if (mounted) Navigator.pop(context);
     });
   }
 }
