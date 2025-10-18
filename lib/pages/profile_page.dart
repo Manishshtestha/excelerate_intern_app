@@ -10,10 +10,10 @@ class ProfilePage extends StatefulWidget {
 
 class _ProfilePageState extends State<ProfilePage> {
   // Sample list of enrolled courses
-  final courses = ['Flutter Basics', 'Dart Fundamentals', 'State Management'];
+  final courses = ['Flutter Basics', 'Dart Fundamentals', 'Python Basics','Node.js Essentials'];
 
   // Corresponding progress status for each course
-  final progress = ['Complete', 'In Progress', 'In Progress'];
+  final progress = ['In Progress', 'Complete', 'In Progress', 'In Progress'];
 
   @override
   Widget build(BuildContext context) {
