@@ -3,7 +3,7 @@ import 'dart:math';
 import 'package:excelerate_intern_app/pages/login.dart';
 import 'package:flutter/material.dart';
 
-
+// Splash screen displayed when the app starts
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
 
@@ -11,34 +11,37 @@ class SplashScreen extends StatefulWidget {
   State<SplashScreen> createState() => _SplashScreenState();
 }
 
+// Controls animations and transitions for the splash screen
 class _SplashScreenState extends State<SplashScreen>
     with SingleTickerProviderStateMixin {
-  late AnimationController _fadeController;
-  double progress = 0;
+  late AnimationController _fadeController; // Controls fade-in animation
+  double progress = 0; // Tracks loading progress (0–100%)
 
   @override
   void initState() {
     super.initState();
 
-    // Fade-in animation for the text and progress
+    // Initialize fade-in animation for logo and text
     _fadeController = AnimationController(
       vsync: this,
       duration: const Duration(seconds: 2),
-    )..forward();
+    )..forward(); // Starts animation immediately
 
-    // Simulate loading (increasing percentage gradually)
+    // Simulate a loading effect by increasing progress every 80ms
     Timer.periodic(const Duration(milliseconds: 80), (timer) {
       setState(() {
         progress += 1;
+
+        // When loading reaches 100%, stop timer and navigate to LoginPage
         if (progress >= 100) {
           progress = 100;
           timer.cancel();
 
-          // Navigate to main page when complete
+          // Smooth transition to LoginPage with fade animation
           Navigator.of(context).pushReplacement(
             PageRouteBuilder(
               pageBuilder: (context, animation, secondaryAnimation) =>
-                  LoginPage(),
+                  const LoginPage(),
               transitionsBuilder:
                   (context, animation, secondaryAnimation, child) {
                 final fade = CurvedAnimation(
@@ -57,14 +60,15 @@ class _SplashScreenState extends State<SplashScreen>
 
   @override
   void dispose() {
-    _fadeController.dispose();
+    _fadeController.dispose(); // Dispose animation controller to free memory
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
+    // Gradient used for text and progress bar
     final gradient = const LinearGradient(
-      colors: [Color(0xFFFF5C8D), Color(0xFFFF8C42)], // pink to orange
+      colors: [Color(0xFFFF5C8D), Color(0xFFFF8C42)], // Pink → Orange
       begin: Alignment.topLeft,
       end: Alignment.bottomRight,
     );
@@ -73,14 +77,14 @@ class _SplashScreenState extends State<SplashScreen>
       backgroundColor: Colors.black,
       body: Stack(
         children: [
-          // 🌌 Background animated circles
+          // Background with randomly placed glowing circles
           Positioned.fill(
             child: CustomPaint(
-              painter: GalaxyPainter(),
+              painter: GalaxyPainter(), // Draws the abstract background
             ),
           ),
 
-          // 🌟 Foreground content
+          // Foreground splash content with fade-in animation
           FadeTransition(
             opacity: _fadeController,
             child: Center(
@@ -89,7 +93,7 @@ class _SplashScreenState extends State<SplashScreen>
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    // Gradient LEVEL UP text
+                    // Gradient "LEVEL UP" text
                     ShaderMask(
                       shaderCallback: (bounds) => gradient.createShader(bounds),
                       child: const Text(
@@ -105,7 +109,7 @@ class _SplashScreenState extends State<SplashScreen>
 
                     const SizedBox(height: 40),
 
-                    // Show percentage text
+                    // Display percentage text (progress)
                     Text(
                       "${progress.toInt()}%",
                       style: const TextStyle(
@@ -127,7 +131,7 @@ class _SplashScreenState extends State<SplashScreen>
                       ),
                       alignment: Alignment.centerLeft,
                       child: FractionallySizedBox(
-                        widthFactor: progress / 100,
+                        widthFactor: progress / 100, // Progress fill percentage
                         child: Container(
                           decoration: BoxDecoration(
                             gradient: gradient,
@@ -139,6 +143,7 @@ class _SplashScreenState extends State<SplashScreen>
 
                     const SizedBox(height: 40),
 
+                    // Subtitle text
                     const Text(
                       "Welcome to the Level-UP learning platform!",
                       style: TextStyle(
@@ -150,6 +155,7 @@ class _SplashScreenState extends State<SplashScreen>
 
                     const SizedBox(height: 10),
 
+                    // Credit text
                     const Text(
                       "Built by Excelerate Flutter Mobile Development Interns",
                       style: TextStyle(
@@ -169,7 +175,7 @@ class _SplashScreenState extends State<SplashScreen>
   }
 }
 
-// 🌠 Custom painter for glowing circles background
+// 🎆 Custom painter class for glowing circular background
 class GalaxyPainter extends CustomPainter {
   final Random random = Random();
 
@@ -177,7 +183,7 @@ class GalaxyPainter extends CustomPainter {
   void paint(Canvas canvas, Size size) {
     final paint = Paint();
 
-    // Circles in pink and orange tones
+    // Set of colors for the circles (soft glowing effect)
     final colors = [
       const Color(0xFFFF5C8D),
       const Color(0xFFFF8C42),
@@ -185,19 +191,21 @@ class GalaxyPainter extends CustomPainter {
       const Color(0xFFFFA55B),
     ];
 
+    // Draw 30 random glowing circles
     for (int i = 0; i < 30; i++) {
       final color = colors[random.nextInt(colors.length)];
-      final radius = random.nextDouble() * 6 + 2;
+      final radius = random.nextDouble() * 6 + 2; // Vary radius size
       final offset = Offset(
         random.nextDouble() * size.width,
         random.nextDouble() * size.height,
       );
 
+      // Random opacity for more natural glow
       paint.color = color.withOpacity(0.25 + random.nextDouble() * 0.4);
       canvas.drawCircle(offset, radius, paint);
     }
   }
 
   @override
-  bool shouldRepaint(CustomPainter oldDelegate) => true;
+  bool shouldRepaint(CustomPainter oldDelegate) => true; // Always repaint
 }
