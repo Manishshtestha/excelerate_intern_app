@@ -72,7 +72,6 @@ For more details on the user journey, refer to the [User Journey Guide](docs/use
 - [Manish Shrestha](https://github.com/ManishShtestha)
 - [Ofentse Mathosi](https://github.com/Ofentsefefe) 
 - [Tanzila Ahmmed Shoronika](https://github.com/shoronika)
-- [Vedaang Sharma](https://github.com/gtathelegend)
 
 
 ## License
