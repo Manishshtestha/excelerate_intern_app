@@ -2,22 +2,30 @@ import 'package:excelerate_intern_app/widgets/elevated_btn.dart';
 import 'package:excelerate_intern_app/widgets/input_field.dart';
 import 'package:flutter/material.dart';
 
+// Login screen where user enters email and password to access the app
 class LoginPage extends StatelessWidget {
   const LoginPage({super.key});
 
   @override
   Widget build(BuildContext context) {
 
+    // Controllers to read text input from fields
     final TextEditingController email = TextEditingController();
     final TextEditingController password = TextEditingController();
 
+    // Function to handle login validation and navigation
     void login() {
+      // Simple hardcoded authentication check
       if (email.text == 'admin@gmail.com' && password.text == 'admin123') {
+        // Navigate to Bottom Navigation screen after successful login
         Navigator.pushReplacementNamed(context, '/bottomnav');
+
+        // Show success message
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text('Login Successful')),
         );
       } else {
+        // Show error if credentials are invalid
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text('Invalid email or password')),
         );
@@ -25,19 +33,30 @@ class LoginPage extends StatelessWidget {
     }
 
     return Scaffold(
-      appBar: AppBar(title: Text('Level up',style:TextStyle(fontSize: 32,fontWeight: FontWeight.w700)),centerTitle: true,),
+      // App bar with title
+      appBar: AppBar(
+        title: Text(
+          'Level up',
+          style: TextStyle(fontSize: 32, fontWeight: FontWeight.w700),
+        ),
+        centerTitle: true,
+      ),
+
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.all(16.0),
+
+          // Main column for login form + register link
           child: Column(
             children: [
-              // This will center the login form vertically
+              // Expands the login form to fill available space
               Expanded(
                 child: Center(
                   child: Column(
-                    mainAxisSize: MainAxisSize.min, // So it doesn't expand
+                    mainAxisSize: MainAxisSize.min, // Keeps form compact
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
+                      // Page heading
                       Center(
                         child: Text(
                           'Login',
@@ -51,6 +70,7 @@ class LoginPage extends StatelessWidget {
 
                       const SizedBox(height: 40),
 
+                      // Email input field
                       InputField(
                         label: 'Email',
                         hint: 'Enter your email',
@@ -58,14 +78,16 @@ class LoginPage extends StatelessWidget {
                         controller: email,
                       ),
 
+                      // Password input field
                       InputField(
                         label: 'Password',
                         hint: 'Enter your password',
-                        obscureText: true,
+                        obscureText: true, // Hide text
                         icon: Icons.lock,
                         controller: password,
                       ),
 
+                      // "Forgot password" link
                       Padding(
                         padding: const EdgeInsets.only(left: 8, top: 4),
                         child: Text(
@@ -80,6 +102,7 @@ class LoginPage extends StatelessWidget {
 
                       const SizedBox(height: 20),
 
+                      // Login button
                       ElevatedBtn(
                         text: 'Login',
                         onPressed: () {
@@ -91,11 +114,11 @@ class LoginPage extends StatelessWidget {
                 ),
               ),
 
-              // Bottom "Register now" text
+              // Bottom text link to navigate to register page
               Center(
                 child: GestureDetector(
                   onTap: () {
-                    // print('Navigate to Register Page');
+                    // Navigate to Register Page
                     Navigator.pushNamed(context, '/register');
                   },
                   child: RichText(
