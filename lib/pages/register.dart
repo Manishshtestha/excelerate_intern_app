@@ -87,7 +87,9 @@ class RegisterPage extends StatelessWidget {
                       ElevatedBtn(
                         text: 'Register',
                         onPressed: () {
-                          print('Logging in'); // Placeholder for registration logic
+                          // TODO: Implement actual user registration logic here.
+                          // On success, navigate to the main app screen.
+                          Navigator.pushReplacementNamed(context, '/bottomnav');
                         },
                       ),
                     ],

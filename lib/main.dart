@@ -34,7 +34,7 @@ class MyApp extends StatelessWidget {
         '/catalog': (context) => CatalogPage(),     // Course catalog or list screen
         '/progress': (context) => ProgressPage(),   // User progress tracking page
         '/profile': (context) => ProfilePage(),     // User profile screen
-        // '/feedback': (context) => FeedbackPage(), // (Optional) Feedback page if added later
+        '/feedback': (context) => FeedbackScreen(), // (Optional) Feedback page if added later
       },
     );
   }

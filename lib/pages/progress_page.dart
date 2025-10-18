@@ -85,5 +85,13 @@ class _ProgressPageState extends State<ProgressPage> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // -------------------------------
-            // O
+            // Placeholder for content
+            const Center(
+              child: Text('Progress content goes here'),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}

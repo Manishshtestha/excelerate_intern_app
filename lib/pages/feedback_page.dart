@@ -2,12 +2,12 @@ import 'package:flutter/material.dart';
 
 // Feedback screen for a specific course — lets users rate and review
 class FeedbackScreen extends StatefulWidget {
-  final String courseTitle; // Title of the course being reviewed
+  final String? courseTitle; // Title of the course being reviewed
   final String? courseMentor; // Optional course instructor name
 
   const FeedbackScreen({
     super.key,
-    required this.courseTitle,
+    this.courseTitle,
     this.courseMentor,
   });
 
@@ -66,7 +66,7 @@ class _FeedbackScreenState extends State<FeedbackScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Course Feedback'),
+        title: Text(widget.courseTitle == null ? 'App Feedback' : 'Course Feedback'),
         centerTitle: true,
       ),
       body: SingleChildScrollView(
@@ -89,22 +89,24 @@ class _FeedbackScreenState extends State<FeedbackScreen> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Text(
-                      'Share Your Experience',
-                      style: TextStyle(
+                    Text(
+                      widget.courseTitle == null ? 'Share Your Feedback' : 'Share Your Experience',
+                      style: const TextStyle(
                         color: Colors.white,
                         fontSize: 20,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
-                    const SizedBox(height: 8),
-                    Text(
-                      widget.courseTitle,
-                      style: const TextStyle(
-                        color: Colors.white,
-                        fontSize: 16,
+                    if (widget.courseTitle != null) ...[
+                      const SizedBox(height: 8),
+                      Text(
+                        widget.courseTitle!,
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 16,
+                        ),
                       ),
-                    ),
+                    ],
                     // Show mentor info if available
                     if (widget.courseMentor != null) ...[
                       const SizedBox(height: 4),

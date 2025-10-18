@@ -1,4 +1,5 @@
 import 'package:excelerate_intern_app/pages/catalog_page.dart';
+import 'package:excelerate_intern_app/pages/feedback_page.dart';
 import 'package:excelerate_intern_app/pages/profile_page.dart';
 import 'package:excelerate_intern_app/pages/progress_page.dart';
 import 'package:flutter/material.dart';
@@ -19,7 +20,8 @@ class _BottomNavState extends State<BottomNav> {
   final List<Widget> pages = [
     Center(child: CatalogPage()),  // Page 0 → Catalog
     Center(child: ProgressPage()), // Page 1 → Progress
-    Center(child: ProfilePage()),  // Page 2 → Profile
+    Center(child: FeedbackScreen()), // Page 2 → Feedback
+    Center(child: ProfilePage()),  // Page 3 → Profile
   ];
 
   // Handles tap on bottom navigation bar items
@@ -39,6 +41,9 @@ class _BottomNavState extends State<BottomNav> {
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: selectedIndex, // Highlight the active tab
         onTap: onItemTap, // Handle user taps on items
+        selectedItemColor: Colors.blue,
+        unselectedItemColor: Colors.grey,
+        type: BottomNavigationBarType.fixed,
         items: const [
           // Catalog tab
           BottomNavigationBarItem(
@@ -49,6 +54,11 @@ class _BottomNavState extends State<BottomNav> {
           BottomNavigationBarItem(
             icon: Icon(Icons.auto_graph),
             label: 'Progress',
+          ),
+          // Feedback tab
+          BottomNavigationBarItem(
+            icon: Icon(Icons.feedback),
+            label: 'Feedback',
           ),
           // Profile tab
           BottomNavigationBarItem(
