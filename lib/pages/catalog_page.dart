@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:excelerate_intern_app/widgets/course_card.dart';
 import 'package:excelerate_intern_app/pages/CourseDetailPage.dart';
 
+/// The main Catalog Page showing all available courses with
+/// search, category filtering, and navigation to course details.
 class CatalogPage extends StatefulWidget {
   const CatalogPage({super.key});
 
@@ -10,10 +12,16 @@ class CatalogPage extends StatefulWidget {
 }
 
 class _CatalogPageState extends State<CatalogPage> {
+  // Controls visibility of the search bar
   bool visibleSearch = false;
+
+  // Stores the user’s current search input
   String searchQuery = '';
+
+  // Stores the currently selected course category
   String selectedCategory = 'All';
 
+  // List of all available courses (mock/static data for demo)
   final List<Map<String, dynamic>> allCourses = [
     {
       'title': 'Flutter Basics',
@@ -55,8 +63,7 @@ class _CatalogPageState extends State<CatalogPage> {
       'comments': [
         {
           'user': 'Bob',
-          'comment':
-              'The Dart course was very informative and well-structured.',
+          'comment': 'The Dart course was very informative and well-structured.',
         },
       ],
     },
@@ -116,13 +123,13 @@ class _CatalogPageState extends State<CatalogPage> {
       'comments': [
         {
           'user': 'Diana',
-          'comment':
-              'Node.js course is very practical and hands-on. Loving it!',
+          'comment': 'Node.js course is very practical and hands-on. Loving it!',
         },
       ],
     },
   ];
 
+  /// Returns the list of courses filtered by search query and selected category.
   List<Map<String, dynamic>> get filteredCourses {
     return allCourses.where((course) {
       final matchesSearch =
@@ -135,6 +142,7 @@ class _CatalogPageState extends State<CatalogPage> {
     }).toList();
   }
 
+  /// List of available course categories
   List<String> get categories => ['All', 'Mobile', 'Backend', 'Frontend'];
 
   @override
@@ -144,15 +152,19 @@ class _CatalogPageState extends State<CatalogPage> {
         title: const Text('Catalog'),
         centerTitle: true,
         actions: [
+          // Toggles the visibility of the search bar
           IconButton(
             onPressed: () => setState(() => visibleSearch = !visibleSearch),
             icon: const Icon(Icons.search),
           ),
         ],
       ),
+
+      // Main page scroll view
       body: SingleChildScrollView(
         child: Column(
           children: [
+            // Animated search bar visibility
             AnimatedSwitcher(
               duration: const Duration(milliseconds: 250),
               child: visibleSearch
@@ -162,12 +174,12 @@ class _CatalogPageState extends State<CatalogPage> {
                       child: TextField(
                         autofocus: true,
                         decoration: InputDecoration(
-                          // labelText: 'Search Courses',
                           hintText: 'Search...',
                           prefixIcon: const Icon(Icons.search),
                           suffixIcon: IconButton(
                             icon: const Icon(Icons.clear),
                             onPressed: () {
+                              // Clear search and hide search bar
                               setState(() {
                                 searchQuery = '';
                                 visibleSearch = false;
@@ -178,21 +190,25 @@ class _CatalogPageState extends State<CatalogPage> {
                             borderRadius: BorderRadius.circular(12),
                             borderSide: const BorderSide(
                               color: Color(0xFF6A5ACD),
-                            ), // Optional custom color
+                            ),
                           ),
                           contentPadding: const EdgeInsets.symmetric(
                             vertical: 12,
                             horizontal: 16,
                           ),
                         ),
-
+                        // Update search query when user types
                         onChanged: (value) =>
                             setState(() => searchQuery = value),
                       ),
                     )
+                  // Placeholder space when search bar is hidden
                   : const SizedBox(height: 20, key: ValueKey('emptySpace')),
             ),
+
             const SizedBox(height: 10),
+
+            // Section: Featured courses (only shown when no search query)
             if (searchQuery.isEmpty)
               Column(
                 children: [
@@ -210,6 +226,7 @@ class _CatalogPageState extends State<CatalogPage> {
                     ),
                   ),
 
+                  // Horizontal scroll view for featured courses
                   SingleChildScrollView(
                     scrollDirection: Axis.horizontal,
                     child: Padding(
@@ -233,19 +250,20 @@ class _CatalogPageState extends State<CatalogPage> {
                                   imageUrl: course['ImgURL'] as String,
                                   isVerticalLayout: true,
                                   onTap: () {
+                                    // Navigate to detailed course page with fade animation
                                     Navigator.of(context).push(
                                       PageRouteBuilder(
                                         transitionDuration: const Duration(
                                           milliseconds: 350,
                                         ),
                                         pageBuilder: (_, __, ___) =>
-                                            CourseDetailPage(course: course,),
+                                            CourseDetailPage(course: course),
                                         transitionsBuilder:
                                             (_, animation, __, child) =>
                                                 FadeTransition(
-                                                  opacity: animation,
-                                                  child: child,
-                                                ),
+                                          opacity: animation,
+                                          child: child,
+                                        ),
                                       ),
                                     );
                                   },
@@ -260,6 +278,8 @@ class _CatalogPageState extends State<CatalogPage> {
               )
             else
               const SizedBox.shrink(),
+
+            // Category filter chips
             Container(
               height: 40,
               padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -284,7 +304,10 @@ class _CatalogPageState extends State<CatalogPage> {
                 ),
               ),
             ),
+
             const SizedBox(height: 10),
+
+            // Display filtered course list or "no results" message
             filteredCourses.isEmpty
                 ? const Center(child: Text('No courses found'))
                 : Column(
@@ -302,6 +325,8 @@ class _CatalogPageState extends State<CatalogPage> {
                           ),
                         ),
                       ),
+
+                      // Vertical list of filtered courses
                       for (var course in filteredCourses)
                         Padding(
                           padding: const EdgeInsets.only(
@@ -318,19 +343,19 @@ class _CatalogPageState extends State<CatalogPage> {
                               imageUrl: course['ImgURL'] as String,
                               isVerticalLayout: false,
                               onTap: () {
+                                // Navigate to detailed course page
                                 Navigator.of(context).push(
                                   PageRouteBuilder(
-                                    transitionDuration: const Duration(
-                                      milliseconds: 350,
-                                    ),
+                                    transitionDuration:
+                                        const Duration(milliseconds: 350),
                                     pageBuilder: (_, __, ___) =>
-                                        CourseDetailPage(course: course,),
+                                        CourseDetailPage(course: course),
                                     transitionsBuilder:
                                         (_, animation, __, child) =>
                                             FadeTransition(
-                                              opacity: animation,
-                                              child: child,
-                                            ),
+                                      opacity: animation,
+                                      child: child,
+                                    ),
                                   ),
                                 );
                               },
