@@ -2,35 +2,42 @@ import 'package:flutter/material.dart';
 import 'package:excelerate_intern_app/widgets/elevated_btn.dart';
 import 'package:excelerate_intern_app/widgets/input_field.dart';
 
+// A StatelessWidget that displays the user registration screen
 class RegisterPage extends StatelessWidget {
   const RegisterPage({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      // App bar at the top of the screen
       appBar: AppBar(
         title: Text(
-          'Level up',
+          'Level up', // App title text
           style: TextStyle(fontSize: 32, fontWeight: FontWeight.w700),
         ),
-        centerTitle: true,
+        centerTitle: true, // Centers the title
         leading: BackButton(
+          // Back button to return to the previous screen
           onPressed: () {
             Navigator.pop(context);
           },
         ),
       ),
+
       body: SafeArea(
+        // Ensures UI doesn't overlap with system status bar or notches
         child: Padding(
-          padding: EdgeInsetsGeometry.all(16),
+          padding: const EdgeInsets.all(16.0), // Adds consistent padding
           child: Column(
             children: [
+              // Expanded makes the main content take up available space
               Expanded(
                 child: Center(
                   child: Column(
-                    mainAxisSize: MainAxisSize.min, // So it doesn't expand
+                    mainAxisSize: MainAxisSize.min, // Shrinks to content height
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
+                      // Register heading
                       Center(
                         child: Text(
                           'Register',
@@ -42,25 +49,31 @@ class RegisterPage extends StatelessWidget {
                         ),
                       ),
 
-                      const SizedBox(height: 40),
+                      const SizedBox(height: 40), // Spacing before input fields
+
+                      // Input field for full name
                       InputField(
                         label: 'Full Name',
                         hint: 'Full Name',
-                        // icon: Icons.mail_sharp,
+                        // icon: Icons.person, // (Optional) Can add icon
                       ),
-                      
+
+                      // Input field for email
                       InputField(
                         label: 'Email',
                         hint: 'Email',
                         // icon: Icons.mail_sharp,
                       ),
 
+                      // Input field for password
                       InputField(
                         label: 'Password',
                         hint: 'Password',
-                        obscureText: true,
+                        obscureText: true, // Hides entered text
                         // icon: Icons.lock,
                       ),
+
+                      // Input field for confirm password
                       InputField(
                         label: 'Password',
                         hint: 'Confirm Password',
@@ -68,11 +81,13 @@ class RegisterPage extends StatelessWidget {
                         // icon: Icons.lock,
                       ),
 
-                      SizedBox(height: 20),
+                      const SizedBox(height: 20), // Space before button
+
+                      // Register button
                       ElevatedBtn(
                         text: 'Register',
                         onPressed: () {
-                          print('Logging in');
+                          print('Logging in'); // Placeholder for registration logic
                         },
                       ),
                     ],
