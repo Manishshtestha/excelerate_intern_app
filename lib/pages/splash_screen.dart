@@ -7,7 +7,7 @@ import 'package:flutter/material.dart';
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
 
-  @override
+  @override 
   State<SplashScreen> createState() => _SplashScreenState();
 }
 
@@ -94,6 +94,15 @@ class _SplashScreenState extends State<SplashScreen>
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     // Gradient "LEVEL UP" text
+                    Image.network('https://excelerateuserprofile.s3.ap-south-1.amazonaws.com/WebsiteImages/Excelerate_180_27.png',
+                      height: 100,
+                    ),
+                    Text('presents',
+                      style: TextStyle(
+                        fontSize: 20,
+                        color: Colors.white,
+                      ),
+                    ),
                     ShaderMask(
                       shaderCallback: (bounds) => gradient.createShader(bounds),
                       child: const Text(
