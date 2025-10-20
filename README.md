@@ -22,14 +22,19 @@ The Level-up app will include the following core features, designed to align wit
 - **Course/Skill Detail Page**: Provide a detailed view for each course or skill including description, duration, and prerequisites.
 - **User Profile & Progress Tracking**: Enable users to view their learning progress and enrolled courses.
   
-## Screenshots/Images
-<img src="assets/images/Login_page.jpg" width="400" alt="Mobile app Login page">
-<img src="assets/images/Register_page.jpg" width="400" alt="Mobile app Register page">
-<img src="assets/images/Catalot_page.jpg" width="400" alt="Mobile app Catalog page">
-<img src="assets/images/Course_detail_Page.jpg" width="400" alt="Mobile app Course Detai page">
-<img src="assets/images/Feedback_page.jpg" width="400" alt="Mobile app Feedback page">
-<img src="assets/images/Progress_page.jpg" width="400" alt="Mobile app Progress page">
-<img src="assets/images/Profile_page.jpg" width="400" alt="Mobile app Profile page">
+## App Screens
+
+| Screen | Preview |
+|--------|---------|
+| **Login** | <img src="assets/images/Login_page.jpg" width="300"> |
+| **Register** | <img src="assets/images/Register_page.jpg" width="300"> |
+| **Catalog** | <img src="assets/images/Catalot_page.jpg" width="300"> |
+| **Course Detail** | <img src="assets/images/Course_detail_Page.jpg" width="300"> |
+| **Feedback** | <img src="assets/images/Feedback_page.jpg" width="300"> |
+| **Progress** | <img src="assets/images/Progress_page.jpg" width="300"> |
+| **Profile** | <img src="assets/images/Profile_page.jpg" width="300"> |
+
+
 ## Tech Stack
 
 - **Frontend**: Flutter (Dart)
