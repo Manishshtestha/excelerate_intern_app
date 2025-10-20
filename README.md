@@ -23,8 +23,13 @@ The Level-up app will include the following core features, designed to align wit
 - **User Profile & Progress Tracking**: Enable users to view their learning progress and enrolled courses.
   
 ## Screenshots/Images
-![Login Page](assets/images/Login_page.jpg)
-
+<img src="assets/images/Login_page.jpg" width="400" alt="Mobile app Login page">
+<img src="assets/images/Register_page.jpg" width="400" alt="Mobile app Register page">
+<img src="assets/images/Catalot_page.jpg" width="400" alt="Mobile app Catalog page">
+<img src="assets/images/Course_detail_Page.jpg" width="400" alt="Mobile app Course Detai page">
+<img src="assets/images/Feedback_page.jpg" width="400" alt="Mobile app Feedback page">
+<img src="assets/images/Progress_page.jpg" width="400" alt="Mobile app Progress page">
+<img src="assets/images/Profile_page.jpg" width="400" alt="Mobile app Profile page">
 ## Tech Stack
 
 - **Frontend**: Flutter (Dart)
