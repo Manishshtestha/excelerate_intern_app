@@ -238,14 +238,7 @@ class _FeedbackScreenState extends State<FeedbackScreen> {
               const SizedBox(height: 24),
 
               // --- Submit Button ---
-              SizedBox(
-                width: double.infinity,
-                height: 50,
-                child: ElevatedBtn(
-                  text: 'Submit Feedback',
-                  onPressed: _submitFeedback,
-                ),
-              ),
+              ElevatedBtn(text: 'Submit Feedback', onPressed: _submitFeedback),
 
               const SizedBox(height: 32),
 
