@@ -21,6 +21,9 @@ The Level-up app will include the following core features, designed to align wit
 - **Course/Skill Catalog**: Display a catalog of available courses and life skills for users to browse.
 - **Course/Skill Detail Page**: Provide a detailed view for each course or skill including description, duration, and prerequisites.
 - **User Profile & Progress Tracking**: Enable users to view their learning progress and enrolled courses.
+  
+## Screenshots/Images
+![Login Page](assets/images/Login_page.jpg)
 
 ## Tech Stack
 
