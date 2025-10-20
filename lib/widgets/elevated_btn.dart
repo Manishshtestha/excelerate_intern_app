@@ -5,8 +5,8 @@ import 'package:flutter/material.dart';
 class ElevatedBtn extends StatelessWidget {
   final String text; // Text displayed on the button
   final VoidCallback onPressed; // Function executed when button is pressed
-  final Color color; // Background color of the button
-  final Color textColor; // Text color
+  final Color? color; // Background color of the button
+  final Color? textColor; // Text color
   final double borderRadius; // Rounds the button corners
   final double padding; // Vertical padding for button size
 
@@ -14,8 +14,8 @@ class ElevatedBtn extends StatelessWidget {
     super.key,
     required this.text,
     required this.onPressed,
-    this.color = Colors.blue, // Default button color
-    this.textColor = Colors.white, // Default text color
+    this.color , // Default button color
+    this.textColor , // Default text color
     this.borderRadius = 12, // Default rounded corners
     this.padding = 16, // Default padding
   });
@@ -32,8 +32,8 @@ class ElevatedBtn extends StatelessWidget {
         child: ElevatedButton(
           // Styling for the button
           style: ElevatedButton.styleFrom(
-            backgroundColor: color, // Button background color
-            foregroundColor: textColor, // Text/icon color
+            backgroundColor: color ?? Theme.of(context).primaryColor, // Button background color
+            foregroundColor: textColor ?? Colors.white,// Text/icon color
             padding: EdgeInsets.symmetric(vertical: padding), // Vertical padding
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(borderRadius), // Rounded corners

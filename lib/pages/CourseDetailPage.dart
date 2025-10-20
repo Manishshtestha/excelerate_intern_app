@@ -221,7 +221,7 @@ class _CourseDetailPageState extends State<CourseDetailPage> {
                         icon: const Icon(Icons.rate_review, size: 18),
                         label: const Text('Write Review'),
                         style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.blue,
+                          backgroundColor: Theme.of(context).primaryColor,
                           foregroundColor: Colors.white,
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(20),
@@ -283,7 +283,7 @@ class _CourseDetailPageState extends State<CourseDetailPage> {
             height: 50,
             child: ElevatedButton(
               style: ElevatedButton.styleFrom(
-                backgroundColor: isEnrolled ? Colors.green : Colors.blue,
+                backgroundColor: isEnrolled ? Colors.green :Theme.of(context).primaryColor,
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(12),
                 ),

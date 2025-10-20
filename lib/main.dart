@@ -6,7 +6,9 @@ import 'package:excelerate_intern_app/pages/profile_page.dart';
 import 'package:excelerate_intern_app/pages/progress_page.dart';
 import 'package:excelerate_intern_app/pages/register.dart';
 import 'package:excelerate_intern_app/pages/splash_screen.dart';
-import 'package:flutter/material.dart'; 
+import 'package:flutter/material.dart';
+
+import 'Theme/app_theme.dart';
 
 // The entry point of the Flutter app
 void main() {
@@ -20,6 +22,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      theme: AppTheme.lightTheme, // The theme for the app,
       // The first screen shown when the app starts
       home: SplashScreen(),
 
