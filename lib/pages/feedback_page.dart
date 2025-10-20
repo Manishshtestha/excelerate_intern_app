@@ -1,3 +1,4 @@
+import 'package:excelerate_intern_app/widgets/elevated_btn.dart';
 import 'package:flutter/material.dart';
 
 // Feedback screen for a specific course — lets users rate and review
@@ -5,11 +6,7 @@ class FeedbackScreen extends StatefulWidget {
   final String? courseTitle; // Title of the course being reviewed
   final String? courseMentor; // Optional course instructor name
 
-  const FeedbackScreen({
-    super.key,
-    this.courseTitle,
-    this.courseMentor,
-  });
+  const FeedbackScreen({super.key, this.courseTitle, this.courseMentor});
 
   @override
   State<FeedbackScreen> createState() => _FeedbackScreenState();
@@ -17,7 +14,8 @@ class FeedbackScreen extends StatefulWidget {
 
 class _FeedbackScreenState extends State<FeedbackScreen> {
   int selectedRating = 0; // Stores the selected star rating (1–5)
-  final TextEditingController _feedbackController = TextEditingController(); // Controller for feedback text input
+  final TextEditingController _feedbackController =
+      TextEditingController(); // Controller for feedback text input
   String selectedCategory = 'Course Content'; // Default feedback category
 
   // List of predefined feedback categories
@@ -35,14 +33,16 @@ class _FeedbackScreenState extends State<FeedbackScreen> {
     {
       'user': 'Sarah Johnson',
       'rating': 5,
-      'comment': 'Excellent course! The instructor explains complex concepts very clearly.',
+      'comment':
+          'Excellent course! The instructor explains complex concepts very clearly.',
       'date': '2 days ago',
       'category': 'Course Content',
     },
     {
       'user': 'Michael Chen',
       'rating': 4,
-      'comment': 'Great content, but some modules could use more practical examples.',
+      'comment':
+          'Great content, but some modules could use more practical examples.',
       'date': '5 days ago',
       'category': 'Learning Experience',
     },
@@ -66,7 +66,9 @@ class _FeedbackScreenState extends State<FeedbackScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.courseTitle == null ? 'App Feedback' : 'Course Feedback'),
+        title: Text(
+          widget.courseTitle == null ? 'App Feedback' : 'Course Feedback',
+        ),
         centerTitle: true,
       ),
       body: SingleChildScrollView(
@@ -90,7 +92,9 @@ class _FeedbackScreenState extends State<FeedbackScreen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      widget.courseTitle == null ? 'Share Your Feedback' : 'Share Your Experience',
+                      widget.courseTitle == null
+                          ? 'Share Your Feedback'
+                          : 'Share Your Experience',
                       style: const TextStyle(
                         color: Colors.white,
                         fontSize: 20,
@@ -201,8 +205,9 @@ class _FeedbackScreenState extends State<FeedbackScreen> {
                     backgroundColor: Colors.grey[100],
                     labelStyle: TextStyle(
                       color: isSelected ? Colors.blue[700] : Colors.grey[700],
-                      fontWeight:
-                          isSelected ? FontWeight.w600 : FontWeight.normal,
+                      fontWeight: isSelected
+                          ? FontWeight.w600
+                          : FontWeight.normal,
                     ),
                   );
                 }).toList(),
@@ -236,19 +241,9 @@ class _FeedbackScreenState extends State<FeedbackScreen> {
               SizedBox(
                 width: double.infinity,
                 height: 50,
-                child: ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.blue,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                  ),
-                  onPressed: _submitFeedback, // Submit feedback handler
-                  child: const Text(
-                    'Submit Feedback',
-                    style: TextStyle(
-                      fontSize: 16, fontWeight: FontWeight.bold, color: Colors.white),
-                  ),
+                child: ElevatedBtn(
+                  text: 'Submit Feedback',
+                  onPressed: _submitFeedback,
                 ),
               ),
 
@@ -356,8 +351,10 @@ class _FeedbackScreenState extends State<FeedbackScreen> {
             ),
           ),
           const SizedBox(width: 8),
-          Text('${(percentage * 100).toInt()}%',
-              style: const TextStyle(fontSize: 11)),
+          Text(
+            '${(percentage * 100).toInt()}%',
+            style: const TextStyle(fontSize: 11),
+          ),
         ],
       ),
     );
@@ -392,7 +389,10 @@ class _FeedbackScreenState extends State<FeedbackScreen> {
                 child: Text(
                   feedback['user'][0], // First letter of name
                   style: const TextStyle(
-                    fontSize: 16, fontWeight: FontWeight.bold, color: Colors.blue),
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.blue,
+                  ),
                 ),
               ),
               const SizedBox(width: 12),
@@ -400,11 +400,17 @@ class _FeedbackScreenState extends State<FeedbackScreen> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(feedback['user'],
-                        style: const TextStyle(
-                          fontWeight: FontWeight.w600, fontSize: 15)),
-                    Text(feedback['date'],
-                        style: TextStyle(fontSize: 12, color: Colors.grey[600])),
+                    Text(
+                      feedback['user'],
+                      style: const TextStyle(
+                        fontWeight: FontWeight.w600,
+                        fontSize: 15,
+                      ),
+                    ),
+                    Text(
+                      feedback['date'],
+                      style: TextStyle(fontSize: 12, color: Colors.grey[600]),
+                    ),
                   ],
                 ),
               ),
