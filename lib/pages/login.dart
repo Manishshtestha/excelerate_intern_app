@@ -3,27 +3,39 @@ import 'package:excelerate_intern_app/widgets/input_field.dart';
 import 'package:flutter/material.dart';
 
 // Login screen where user enters email and password to access the app
-class LoginPage extends StatelessWidget {
+class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
 
   @override
+  State<LoginPage> createState() => _LoginPageState();
+}
+
+class _LoginPageState extends State<LoginPage> {
+  // Controllers to read text input from fields
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+  
+  @override
+  void dispose() {
+    _emailController.dispose();
+    _passwordController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
-
-    // Controllers to read text input from fields
-    final TextEditingController email = TextEditingController();
-    final TextEditingController password = TextEditingController();
-
     // Function to handle login validation and navigation
     void login() {
       // Simple hardcoded authentication check
-      if (email.text == 'admin@gmail.com' && password.text == 'admin123') {
+      if (_emailController.text == 'admin@gmail.com' &&
+          _passwordController.text == 'admin123') {
         // Navigate to Bottom Navigation screen after successful login
         Navigator.pushReplacementNamed(context, '/bottomnav');
 
         // Show success message
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Login Successful')),
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(const SnackBar(content: Text('Login Successful')));
       } else {
         // Show error if credentials are invalid
         ScaffoldMessenger.of(context).showSnackBar(
@@ -75,7 +87,10 @@ class LoginPage extends StatelessWidget {
                         label: 'Email',
                         hint: 'Enter your email',
                         icon: Icons.mail_sharp,
-                        controller: email,
+                        controller: _emailController,
+                        autoFocus: true,
+                        fieldType: InputFieldType.email,
+                        isRequired: true,
                       ),
 
                       // Password input field
@@ -84,7 +99,9 @@ class LoginPage extends StatelessWidget {
                         hint: 'Enter your password',
                         obscureText: true, // Hide text
                         icon: Icons.lock,
-                        controller: password,
+                        controller: _passwordController,
+                        fieldType: InputFieldType.password,
+                        isRequired: true,
                       ),
 
                       // "Forgot password" link
