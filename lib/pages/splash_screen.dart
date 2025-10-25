@@ -7,7 +7,7 @@ import 'package:flutter/material.dart';
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
 
-  @override 
+  @override
   State<SplashScreen> createState() => _SplashScreenState();
 }
 
@@ -27,10 +27,11 @@ class _SplashScreenState extends State<SplashScreen>
       duration: const Duration(seconds: 2),
     )..forward(); // Starts animation immediately
 
-    // Simulate a loading effect by increasing progress every 80ms
-    Timer.periodic(const Duration(milliseconds: 80), (timer) {
+    // Simulate a faster loading effect by increasing progress more quickly
+    Timer.periodic(const Duration(milliseconds: 40), (timer) {
+      // Shorten the duration
       setState(() {
-        progress += 1;
+        progress += 1; // Increase progress by 5% at a time
 
         // When loading reaches 100%, stop timer and navigate to LoginPage
         if (progress >= 100) {
@@ -44,12 +45,12 @@ class _SplashScreenState extends State<SplashScreen>
                   const LoginPage(),
               transitionsBuilder:
                   (context, animation, secondaryAnimation, child) {
-                final fade = CurvedAnimation(
-                  parent: animation,
-                  curve: Curves.easeInOut,
-                );
-                return FadeTransition(opacity: fade, child: child);
-              },
+                    final fade = CurvedAnimation(
+                      parent: animation,
+                      curve: Curves.easeInOut,
+                    );
+                    return FadeTransition(opacity: fade, child: child);
+                  },
               transitionDuration: const Duration(milliseconds: 800),
             ),
           );
@@ -94,14 +95,13 @@ class _SplashScreenState extends State<SplashScreen>
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     // Gradient "LEVEL UP" text
-                    Image.network('https://excelerateuserprofile.s3.ap-south-1.amazonaws.com/WebsiteImages/Excelerate_180_27.png',
+                    Image.network(
+                      'https://excelerateuserprofile.s3.ap-south-1.amazonaws.com/WebsiteImages/Excelerate_180_27.png',
                       height: 100,
                     ),
-                    Text('presents',
-                      style: TextStyle(
-                        fontSize: 20,
-                        color: Colors.white,
-                      ),
+                    Text(
+                      'presents',
+                      style: TextStyle(fontSize: 20, color: Colors.white),
                     ),
                     ShaderMask(
                       shaderCallback: (bounds) => gradient.createShader(bounds),
@@ -155,10 +155,7 @@ class _SplashScreenState extends State<SplashScreen>
                     // Subtitle text
                     const Text(
                       "Welcome to the Level-UP learning platform!",
-                      style: TextStyle(
-                        fontSize: 18,
-                        color: Colors.white,
-                      ),
+                      style: TextStyle(fontSize: 18, color: Colors.white),
                       textAlign: TextAlign.center,
                     ),
 
@@ -167,10 +164,7 @@ class _SplashScreenState extends State<SplashScreen>
                     // Credit text
                     const Text(
                       "Built by Excelerate Flutter Mobile Development Interns",
-                      style: TextStyle(
-                        fontSize: 14,
-                        color: Colors.white70,
-                      ),
+                      style: TextStyle(fontSize: 14, color: Colors.white70),
                       textAlign: TextAlign.center,
                     ),
                   ],
