@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "141174377008",
+    "project_id": "leveluplearning-583e0",
+    "storage_bucket": "leveluplearning-583e0.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:141174377008:android:f5ceecdd9484da928bbbf5",
+        "android_client_info": {
+          "package_name": "com.example.excelerate_intern_app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCjlld4bxkepFGlwj13SJ19wjHUBGxyrNA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
