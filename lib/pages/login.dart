@@ -16,6 +16,8 @@ class _LoginPageState extends State<LoginPage> {
   final TextEditingController _passwordController = TextEditingController();
   
   @override
+  // Dispose controllers to free memory when widget is removed
+
   void dispose() {
     _emailController.dispose();
     _passwordController.dispose();
