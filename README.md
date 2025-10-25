@@ -42,24 +42,24 @@ The Level-up app will include the following core features, designed to align wit
 - **Other Tools**: Git for version control, potentially packages like `firebase_auth`, `cloud_firestore`, etc.
 
 ## Project Structure
-lib/ 
+lib/                                                                                                                       
 ├── main.dart                                                                                                                                          
-├── theme/ 
-│ └── app_theme.dart 
-├── pages/ 
-│ ├── CourseDetailPage.dart 
-│ ├── bottom_nav.dart 
-│ ├── catalog_page.dart 
-│ ├── feedback_page.dart 
-│ ├── login.dart 
-│ ├── profile_page.dart 
-│ ├── progress_page.dart 
-│ ├── register.dart 
-│ └── splash_screen.dart 
-├── widgets/ 
-│ ├── course_card.dart 
-│ ├── elevated_btn.dart 
-│ └── input_field.dart
+├── theme/                                                                                                    
+│ └── app_theme.dart                                                                                             
+├── pages/                                                                                                          
+│ ├── CourseDetailPage.dart                                                                                     
+│ ├── bottom_nav.dart                                                                                             
+│ ├── catalog_page.dart                                                                                            
+│ ├── feedback_page.dart                                                                                            
+│ ├── login.dart                                                                                                   
+│ ├── profile_page.dart                                                                                              
+│ ├── progress_page.dart                                                                                            
+│ ├── register.dart                                                                                                 
+│ └── splash_screen.dart                                                                                          
+├── widgets/                                                                                                       
+│ ├── course_card.dart                                                                                               
+│ ├── elevated_btn.dart                                                                                            
+│ └── input_field.dart                                                                                                  
 
 
 ## Getting Started
