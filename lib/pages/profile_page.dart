@@ -8,7 +8,7 @@ class ProfilePage extends StatefulWidget {
   State<ProfilePage> createState() => _ProfilePageState();
 }
 
-class _ProfilePageState extends State<ProfilePage> {
+class _ProfilePageState extends State<ProfilePage> { 
   // Sample list of enrolled courses
   final courses = ['Flutter Basics', 'Dart Fundamentals', 'Python Basics','Node.js Essentials'];
 
