@@ -41,6 +41,27 @@ The Level-up app will include the following core features, designed to align wit
 - **Backend**: Firebase (Authentication, Firestore for data storage)
 - **Other Tools**: Git for version control, potentially packages like `firebase_auth`, `cloud_firestore`, etc.
 
+## Project Structure
+lib/
+┣ Theme/
+  ┗ app_theme.dart 
+┣ pages/ 
+  ┗ CourseDetailPage.dart 
+  ┗ bottom_nav.dart
+  ┗ catalog_page.dart 
+  ┗ feedback_page.dart 
+  ┗ login.dart 
+  ┗ profile_page.dart 
+  ┗ progress_page.dart 
+  ┗ register.dart 
+  ┗ splash_screen.dart 
+┣ widgets/ 
+  ┗course_card.dart
+  ┗elevated_btn.dart
+  ┗input_field.dart
+┣ main.dart
+
+
 ## Getting Started
 
 ### Prerequisites
@@ -79,7 +100,7 @@ For more details on the user journey, refer to the [User Journey Guide](docs/use
 
 ## Contributors
 
-- [Abhay Shaw](https://github.com/abhayshaw323 )
+- [Abhay Shaw](https://github.com/abhayshaw323)
 - [Atif Shaif](https://github.com/atifs899)
 - [Lungile Mawila](https://github.com/LungstarCode)
 - [Manish Shrestha](https://github.com/ManishShtestha)
