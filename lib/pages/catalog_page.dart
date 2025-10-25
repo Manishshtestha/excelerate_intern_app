@@ -12,7 +12,7 @@ class CatalogPage extends StatefulWidget {
 }
 
 class _CatalogPageState extends State<CatalogPage> {
-  // Controls visibility of the search bar
+  // Controls visibility of the search bar 
   bool visibleSearch = false;
 
   // Stores the user’s current search input
