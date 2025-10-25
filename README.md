@@ -43,7 +43,6 @@ The Level-up app will include the following core features, designed to align wit
 
 ## Project Structure
 lib/                                                                                                                       
-├── main.dart                                                                                                                                          
 ├── theme/                                                                                                    
 │ └── app_theme.dart                                                                                             
 ├── pages/                                                                                                          
@@ -60,7 +59,7 @@ lib/
 │ ├── course_card.dart                                                                                               
 │ ├── elevated_btn.dart                                                                                            
 │ └── input_field.dart                                                                                                  
-
+├── main.dart                                                                                                                                          
 
 ## Getting Started
 
