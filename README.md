@@ -43,9 +43,13 @@ The Level-up app will include the following core features, designed to align wit
 
 ## Project Structure
 lib/
+
 ┣ Theme/
+
   ┗ app_theme.dart 
+  
 ┣ pages/ 
+
   ┗ CourseDetailPage.dart 
   ┗ bottom_nav.dart
   ┗ catalog_page.dart 
