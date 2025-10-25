@@ -61,6 +61,22 @@ lib/
 │ └── input_field.dart                                                                                                  
 ├── main.dart                                                                                                                                          
 
+## Dependencies
+
+The app uses the following Flutter and Firebase packages:
+
+- **firebase_core** – Initializes Firebase in the app.  
+- **firebase_auth** – Handles user authentication (login, signup).  
+- **cloud_firestore** – Stores user data, courses, and progress.  
+- **firebase_storage** – (Optional) For uploading and retrieving media files.  
+- **provider** – Simple state management solution.  
+- **google_fonts** – Provides clean and modern typography.  
+- **fluttertoast** – Displays feedback and toast notifications.  
+- **cupertino_icons** – Default iOS-style icon pack.
+
+To install all dependencies, run:
+bash command :- flutter pub get
+
 ## Getting Started
 
 ### Prerequisites
