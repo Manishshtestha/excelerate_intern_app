@@ -1,3 +1,5 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+
 class UserModel {
   final String uid;
   final String email;
@@ -21,21 +23,31 @@ class UserModel {
       'uid': uid,
       'email': email,
       'displayName': displayName,
+      // Optional: switch to FieldValue.serverTimestamp() if preferred
       'createdAt': createdAt.toIso8601String(),
       'enrolledCourses': enrolledCourses,
       'courseProgress': courseProgress,
     };
   }
 
-  // Create UserModel from Firestore document
+  // Create UserModel from Firestore document safely
   factory UserModel.fromMap(Map<String, dynamic> map) {
+    dynamic createdAtValue = map['createdAt'];
+
+    DateTime parsedDate;
+    if (createdAtValue is Timestamp) {
+      parsedDate = createdAtValue.toDate();
+    } else if (createdAtValue is String) {
+      parsedDate = DateTime.tryParse(createdAtValue) ?? DateTime.now();
+    } else {
+      parsedDate = DateTime.now();
+    }
+
     return UserModel(
       uid: map['uid'] ?? '',
       email: map['email'] ?? '',
       displayName: map['displayName'] ?? '',
-      createdAt: DateTime.parse(
-        map['createdAt'] ?? DateTime.now().toIso8601String(),
-      ),
+      createdAt: parsedDate,
       enrolledCourses: List<String>.from(map['enrolledCourses'] ?? []),
       courseProgress: Map<String, dynamic>.from(map['courseProgress'] ?? {}),
     );
