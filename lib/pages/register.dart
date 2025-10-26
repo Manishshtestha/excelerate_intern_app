@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:excelerate_intern_app/widgets/elevated_btn.dart';
 import 'package:excelerate_intern_app/widgets/input_field.dart';
+import 'package:excelerate_intern_app/models/user_model.dart';
+import 'package:excelerate_intern_app/services/firestore_service.dart';
 
-// A StatelessWidget that displays the user registration screen
 class RegisterPage extends StatefulWidget {
   const RegisterPage({super.key});
 
@@ -11,162 +13,208 @@ class RegisterPage extends StatefulWidget {
 }
 
 class _RegisterPageState extends State<RegisterPage> {
-  final TextEditingController _nameController = TextEditingController();
-  final TextEditingController _emailController = TextEditingController();
-  final TextEditingController _passwordController = TextEditingController();
-  final TextEditingController _confirmPasswordController =
-      TextEditingController();
+  final _formKey = GlobalKey<FormState>();
+  final _emailController = TextEditingController();
+  final _passwordController = TextEditingController();
+  final _nameController = TextEditingController();
+  bool _isLoading = false;
 
   @override
   void dispose() {
-    // Clean up controllers
-    _nameController.dispose();
     _emailController.dispose();
     _passwordController.dispose();
-    _confirmPasswordController.dispose();
+    _nameController.dispose();
     super.dispose();
   }
 
-  // Custom validator functions
-  String? _customNameValidator(String? value) {
-    if (value == null || value.trim().isEmpty) {
-      return 'Name is required';
-    }
-    if (value.contains(RegExp(r'[0-9]'))) {
-      return 'Name should not contain numbers';
-    }
-    if (!RegExp(r'^[a-zA-Z\s]+$').hasMatch(value)) {
-      return 'Name should only contain letters and spaces';
-    }
-    if (value.trim().length < 3) {
-      return 'Name must be at least 3 characters';
-    }
-    if (value.trim().length > 50) {
-      return 'Name must be less than 50 characters';
-    }
-    return null;
-  }
+  Future<void> register() async {
+    if (!_formKey.currentState!.validate()) return;
 
-  String? _customPasswordValidator(String? value) {
-    if (value == null || value.isEmpty) {
-      return 'Please confirm your password';
+    setState(() => _isLoading = true);
+
+    try {
+      final credential = await FirebaseAuth.instance
+          .createUserWithEmailAndPassword(
+            email: _emailController.text.trim(),
+            password: _passwordController.text.trim(),
+          );
+
+      final user = credential.user;
+      if (user != null) {
+        await user.updateDisplayName(_nameController.text.trim());
+
+        final userModel = UserModel(
+          uid: user.uid,
+          email: user.email!,
+          displayName: _nameController.text.trim(),
+          createdAt: DateTime.now(),
+        );
+
+        await FirestoreService.createUser(userModel);
+
+        if (mounted) {
+          Navigator.pushReplacementNamed(context, '/bottomnav');
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Registration Successful')),
+          );
+        }
+      }
+    } on FirebaseAuthException catch (e) {
+      String message;
+      switch (e.code) {
+        case 'email-already-in-use':
+          message = 'This email is already registered.';
+          break;
+        case 'invalid-email':
+          message = 'Invalid email address.';
+          break;
+        case 'weak-password':
+          message = 'Password must be at least 6 characters.';
+          break;
+        default:
+          message = 'Registration failed. Please try again.';
+      }
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text(message)));
+    } finally {
+      if (mounted) setState(() => _isLoading = false);
     }
-    if (value != _passwordController.text) {
-      return 'Passwords do not match';
-    }
-    return null;
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // App bar at the top of the screen
       appBar: AppBar(
-        title: Text(
-          'Level up', // App title text
+        title: const Text(
+          'Level up',
           style: TextStyle(fontSize: 32, fontWeight: FontWeight.w700),
         ),
-        centerTitle: true, // Centers the title
-        leading: BackButton(
-          // Back button to return to the previous screen
-          onPressed: () {
-            Navigator.pop(context);
-          },
-        ),
+        centerTitle: true,
       ),
       body: SafeArea(
-        // Ensures UI doesn't overlap with system status bar or notches
         child: Padding(
-          padding: const EdgeInsets.all(16.0), // Adds consistent padding
-          child: Column(
-            children: [
-              // Expanded makes the main content take up available space
-              Expanded(
-                child: Center(
-                  child: SingleChildScrollView(
-                    child: Column(
-                      mainAxisSize:
-                          MainAxisSize.min, // Shrinks to content height
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        // Register heading
-                        Center(
-                          child: Text(
-                            'Register',
-                            style: TextStyle(
-                              fontSize: 32,
-                              color: Colors.black,
-                              fontWeight: FontWeight.w400,
-                            ),
+          padding: const EdgeInsets.all(16),
+          child: Form(
+            key: _formKey,
+            child: Column(
+              children: [
+                Expanded(
+                  child: Center(
+                    child: _isLoading
+                        ? const CircularProgressIndicator()
+                        : Column(
+                            mainAxisSize: MainAxisSize.min,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              const Center(
+                                child: Text(
+                                  'Register',
+                                  style: TextStyle(
+                                    fontSize: 32,
+                                    fontWeight: FontWeight.w400,
+                                  ),
+                                ),
+                              ),
+                              const SizedBox(height: 40),
+
+                              // Full Name
+                              InputField(
+                                label: 'Full Name',
+                                hint: 'Enter your full name',
+                                icon: Icons.person,
+                                controller: _nameController,
+                                fieldType: InputFieldType.text,
+                                validator: (value) {
+                                  if (value == null || value.trim().isEmpty) {
+                                    return 'Full name is required';
+                                  }
+                                  return null;
+                                },
+                              ),
+
+                              // Email
+                              InputField(
+                                label: 'Email',
+                                hint: 'Enter your email',
+                                icon: Icons.mail,
+                                controller: _emailController,
+                                fieldType: InputFieldType.email,
+                                validator: (value) {
+                                  if (value == null || value.isEmpty) {
+                                    return 'Email is required';
+                                  }
+                                  if (!RegExp(
+                                    r'^[^@]+@[^@]+\.[^@]+',
+                                  ).hasMatch(value)) {
+                                    return 'Enter a valid email address';
+                                  }
+                                  return null;
+                                },
+                              ),
+
+                              // Password
+                              InputField(
+                                label: 'Password',
+                                hint: 'Enter your password',
+                                obscureText: true,
+                                icon: Icons.lock,
+                                controller: _passwordController,
+                                fieldType: InputFieldType.password,
+                                validator: (value) {
+                                  if (value == null || value.isEmpty) {
+                                    return 'Password is required';
+                                  }
+                                  if (value.length < 6) {
+                                    return 'Password must be at least 6 characters long';
+                                  }
+                                  if(!value.contains(RegExp(r'[A-Z]'))){
+                                    return 'Password must contain at least one uppercase letter';
+                                  }
+                                  if(!value.contains(RegExp(r'[a-z]'))){
+                                    return 'Password must contain at least one lowercase letter';
+                                  }
+                                  if(!value.contains(RegExp(r'[0-9]'))){
+                                    return 'Password must contain at least one number';
+                                  }
+                                  if(!value.contains(RegExp(r'[!@#$%^&*(),.?":{}|<>]'))){
+                                    return 'Password must contain at least one special character';
+                                  }
+                                  return null;
+                                },
+                              ),
+
+                              const SizedBox(height: 20),
+
+                              ElevatedBtn(
+                                text: 'Register',
+                                onPressed: _isLoading ? null : register,
+                              ),
+                            ],
                           ),
-                        ),
-
-                        const SizedBox(
-                          height: 40,
-                        ), // Spacing before input fields
-                        // Input field for full name
-                        InputField(
-                          label: 'Full Name',
-                          hint: 'Full Name',
-                          icon: Icons.person, // (Optional) Can add icon
-                          controller: _nameController,
-                          fieldType: InputFieldType.text,
-                          isRequired: true,
-                          validator: _customNameValidator,
-                        ),
-
-                        // Input field for email
-                        InputField(
-                          label: 'Email',
-                          hint: 'Email',
-                          icon: Icons.mail_sharp,
-                          controller: _emailController,
-                          fieldType: InputFieldType.email,
-                          isRequired: true,
-                        ),
-
-                        // Input field for password
-                        InputField(
-                          label: 'Password',
-                          hint: 'Password',
-                          obscureText: true, // Hides entered text
-                          icon: Icons.lock,
-                          controller: _passwordController,
-                          fieldType: InputFieldType.password,
-                          isRequired: true,
-                        ),
-
-                        // Input field for confirm password
-                        InputField(
-                          label: 'Password',
-                          hint: 'Confirm Password',
-                          obscureText: true,
-                          icon: Icons.lock,
-                          controller: _confirmPasswordController,
-                          fieldType: InputFieldType.password,
-                          validator: _customPasswordValidator,
-                          isRequired: true,
-                        ),
-
-                        const SizedBox(height: 20), // Space before button
-                        // Register button
-                        ElevatedBtn(
-                          text: 'Register',
-                          onPressed: () {
-                            // TODO: Implement actual user registration logic here.
-                            // On success, navigate to the main app screen.
-                            Navigator.pushReplacementNamed(
-                              context,
-                              '/bottomnav',
-                            );
-                          },
+                  ),
+                ),
+                GestureDetector(
+                  onTap: () => Navigator.pushNamed(context, '/login'),
+                  child: const Text.rich(
+                    TextSpan(
+                      text: "Already have an account? ",
+                      style: TextStyle(color: Colors.black),
+                      children: [
+                        TextSpan(
+                          text: "Login here",
+                          style: TextStyle(
+                            color: Colors.blue,
+                            fontWeight: FontWeight.bold,
+                            decoration: TextDecoration.underline,
+                          ),
                         ),
                       ],
                     ),
                   ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),
