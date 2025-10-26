@@ -28,7 +28,7 @@ class _SplashScreenState extends State<SplashScreen>
     )..forward(); // Starts animation immediately
 
     // Simulate a faster loading effect by increasing progress more quickly
-    Timer.periodic(const Duration(milliseconds: 40), (timer) {
+    Timer.periodic(const Duration(milliseconds: 30), (timer) {
       // Shorten the duration
       setState(() {
         progress += 1; // Increase progress by 5% at a time
