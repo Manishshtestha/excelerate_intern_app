@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:excelerate_intern_app/models/user_model.dart'; // adjust the path if needed
 
-// Profile page showing user info and enrolled courses
+
 class ProfilePage extends StatefulWidget {
   const ProfilePage({super.key});
 
@@ -8,82 +11,115 @@ class ProfilePage extends StatefulWidget {
   State<ProfilePage> createState() => _ProfilePageState();
 }
 
-class _ProfilePageState extends State<ProfilePage> { 
-  // Sample list of enrolled courses
-  final courses = ['Flutter Basics', 'Dart Fundamentals', 'Python Basics','Node.js Essentials'];
+class _ProfilePageState extends State<ProfilePage> {
+  UserModel? _userModel;
+  bool _isLoading = true;
 
-  // Corresponding progress status for each course
-  final progress = ['In Progress', 'Complete', 'In Progress', 'In Progress'];
+  @override
+  void initState() {
+    super.initState();
+    _fetchUserData();
+  }
+
+  // Fetch the logged-in user's data from Firestore
+  Future<void> _fetchUserData() async {
+    try {
+      final user = FirebaseAuth.instance.currentUser;
+      if (user == null) {
+        setState(() => _isLoading = false);
+        return;
+      }
+
+      final doc =
+          await FirebaseFirestore.instance.collection('users').doc(user.uid).get();
+
+      if (doc.exists && doc.data() != null) {
+        _userModel = UserModel.fromMap(doc.data()!);
+      }
+
+      setState(() => _isLoading = false);
+    } catch (e) {
+      print('Error fetching user data: $e');
+      setState(() => _isLoading = false);
+    }
+  }
+
+  // Log out the user and redirect to login
+  Future<void> _logout() async {
+    await FirebaseAuth.instance.signOut();
+    if (mounted) {
+      Navigator.pushReplacementNamed(context, '/login');
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
+    if (_isLoading) {
+      return const Scaffold(
+        body: Center(child: CircularProgressIndicator()),
+      );
+    }
+
+    if (_userModel == null) {
+      return Scaffold(
+        appBar: AppBar(title: const Text('Profile')),
+        body: const Center(child: Text('No user data found')),
+      );
+    }
+
+    final user = _userModel!;
+
     return Scaffold(
-      // App bar section with profile title and settings menu
       appBar: AppBar(
-        title: Text('Profile'),
+        title: const Text('Profile'),
         centerTitle: true,
         actions: [
-          // Popup menu button (for Settings, Logout, etc.)
           PopupMenuButton<String>(
             onSelected: (value) {
-              // TODO: Add functionality later (e.g., open settings page)
-              print('You selected: $value'); // Placeholder for now
+              if (value == 'logout') _logout();
             },
             itemBuilder: (context) => [
-              // Settings option
-              PopupMenuItem(
-                value: 'settings',
-                child: Text('Settings'),
-              ),
-
-              // Logout option — navigates back to login page
-              PopupMenuItem(
-                value: 'logout',
-                child: Text('Logout'),
-                onTap: () {
-                  // Replace current route with Login Page
-                  Navigator.pushReplacementNamed(context, '/login');
-                },
-              ),
+              const PopupMenuItem(value: 'settings', child: Text('Settings')),
+              const PopupMenuItem(value: 'logout', child: Text('Logout')),
             ],
           ),
         ],
       ),
-
-      // Body of the page (scrollable in case of overflow)
       body: SingleChildScrollView(
+        padding: const EdgeInsets.all(16),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Profile picture and user information
+            // User Info Section
             Center(
               child: Column(
                 children: [
-                  SizedBox(height: 10),
-
-                  // User avatar
-                  CircleAvatar(
+                  const SizedBox(height: 10),
+                  const CircleAvatar(
                     radius: 75,
                     backgroundImage: NetworkImage(
                       'https://i.pinimg.com/1200x/67/2c/d6/672cd616936e481ef2632306731a87cd.jpg',
                     ),
                   ),
-
-                  SizedBox(height: 20),
-
-                  // User name (currently static, can be made dynamic)
+                  const SizedBox(height: 20),
                   Text(
-                    'Sophia Carter', // TODO: Make dynamic (fetched from user data)
-                    style: TextStyle(
-                      fontSize: 32,
+                    user.displayName,
+                    style: const TextStyle(
+                      fontSize: 28,
                       fontWeight: FontWeight.w600,
                     ),
                   ),
-
-                  // Joined date (currently static, can be made dynamic)
                   Text(
-                    'Joined 2 years ago', // TODO: Make dynamic
-                    style: TextStyle(
+                    user.email,
+                    style: const TextStyle(
+                      fontSize: 16,
+                      color: Colors.blueGrey,
+                    ),
+                  ),
+                  const SizedBox(height: 4),
+                  Text(
+                    'Joined on ${user.createdAt.toLocal().toString().split(' ')[0]}',
+                    style: const TextStyle(
                       fontSize: 14,
                       color: Colors.blue,
                     ),
@@ -92,47 +128,38 @@ class _ProfilePageState extends State<ProfilePage> {
               ),
             ),
 
-            SizedBox(height: 10),
+            const SizedBox(height: 20),
+            const Text(
+              'Enrolled Courses',
+              style: TextStyle(fontSize: 20, fontWeight: FontWeight.w500),
+            ),
+            const SizedBox(height: 10),
 
-            // Section title: "Courses"
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16),
-              child: Text(
-                'Courses',
-                style: TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.w400,
-                ),
+            // List of Courses
+            if (user.enrolledCourses.isEmpty)
+              const Text(
+                'No courses enrolled yet.',
+                style: TextStyle(color: Colors.grey),
+              )
+            else
+              ListView.builder(
+                padding: EdgeInsets.zero,
+                shrinkWrap: true,
+                physics: const NeverScrollableScrollPhysics(),
+                itemCount: user.enrolledCourses.length,
+                itemBuilder: (context, index) {
+                  final course = user.enrolledCourses[index];
+                  final progress = user.courseProgress[course] ?? 'In Progress';
+                  return ListTile(
+                    leading: const Icon(Icons.book),
+                    title: Text(course),
+                    subtitle: Text(
+                      progress,
+                      style: const TextStyle(color: Colors.blue),
+                    ),
+                  );
+                },
               ),
-            ),
-
-            // List of enrolled courses with progress status
-            ListView.builder(
-              padding: EdgeInsets.all(12),
-              itemCount: courses.length,
-              shrinkWrap: true, // 👈 Makes ListView take only needed space
-              physics: NeverScrollableScrollPhysics(), // Disable internal scroll
-
-              itemBuilder: (context, index) {
-                return ListTile(
-                  leading: Icon(Icons.book), // Course icon
-
-                  // Course title
-                  title: Text(courses[index]),
-
-                  // Course progress status
-                  subtitle: Text(
-                    progress[index],
-                    style: TextStyle(color: Colors.blue),
-                  ),
-
-                  // Handle tap on a course (can navigate later)
-                  onTap: () {
-                    print('Tapped on ${courses[index]}');
-                  },
-                );
-              },
-            ),
           ],
         ),
       ),
