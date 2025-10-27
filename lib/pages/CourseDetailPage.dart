@@ -40,7 +40,7 @@ class _CourseDetailPageState extends State<CourseDetailPage> {
                 children: [
                   // Course image
                   Image.network(
-                    widget.course['ImgURL'],
+                    widget.course['imageUrl'],
                     fit: BoxFit.cover,
                     // Fallback in case image fails to load
                     errorBuilder: (context, error, stackTrace) => Container(
