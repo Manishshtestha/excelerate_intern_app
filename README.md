@@ -54,7 +54,7 @@ lib/
 │ ├── profile_page.dart                                                                                              
 │ ├── progress_page.dart                                                                                            
 │ ├── register.dart                                                                                                 
-│ └── splash_screen.dart 
+│ └── splash_screen.dart                                                                                                  
 ├── models/                                                                                                                  
 | ├── user_model.dart                                                                                                   
 | └── course_model.dart                                                                                                           
