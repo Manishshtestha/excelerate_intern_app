@@ -1,6 +1,5 @@
 import 'package:excelerate_intern_app/pages/bottom_nav.dart';
 import 'package:excelerate_intern_app/pages/catalog_page.dart';
-import 'package:excelerate_intern_app/pages/feedback_page.dart';
 import 'package:excelerate_intern_app/pages/login.dart';
 import 'package:excelerate_intern_app/pages/profile_page.dart';
 import 'package:excelerate_intern_app/pages/progress_page.dart';
@@ -46,8 +45,6 @@ class MyApp extends StatelessWidget {
         '/progress': (context) =>
             const ProgressPage(), // User progress tracking page
         '/profile': (context) => const ProfilePage(), // User profile screen
-        '/feedback': (context) =>
-            const FeedbackScreen(), // (Optional) Feedback page if added later
         '/course-detail': (context) {
           final course =
               ModalRoute.of(context)?.settings.arguments
