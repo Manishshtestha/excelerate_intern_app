@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:excelerate_intern_app/widgets/course_card.dart';
 import 'package:excelerate_intern_app/pages/CourseDetailPage.dart';
 
-/// The main Catalog Page showing all available courses with
-/// search, category filtering, and navigation to course details.
 class CatalogPage extends StatefulWidget {
   const CatalogPage({super.key});
 
@@ -12,137 +11,10 @@ class CatalogPage extends StatefulWidget {
 }
 
 class _CatalogPageState extends State<CatalogPage> {
-  // Controls visibility of the search bar 
   bool visibleSearch = false;
-
-  // Stores the user’s current search input
   String searchQuery = '';
-
-  // Stores the currently selected course category
   String selectedCategory = 'All';
 
-  // List of all available courses (mock/static data for demo)
-  final List<Map<String, dynamic>> allCourses = [
-    {
-      'title': 'Flutter Basics',
-      'subtitle': 'Learn the Fundamentals of Flutter',
-      'ImgURL':
-          'https://d2ms8rpfqc4h24.cloudfront.net/What_is_Flutter_f648a606af.png',
-      'status': 'In Progress',
-      'category': 'Mobile',
-      'mentor': 'John Doe',
-      'modules': {
-        'Introduction': 'Completed',
-        'Widgets': 'In Progress',
-        'State Management': 'Not Started',
-      },
-      'description':
-          'This course covers the basics of Flutter development, including widgets, layouts, and state management.',
-      'comments': [
-        {
-          'user': 'Alice',
-          'comment': 'Great course! Really enjoying the content so far.',
-        },
-      ],
-    },
-    {
-      'title': 'Dart Fundamentals',
-      'subtitle': 'Master the Dart Programming Language',
-      'ImgURL':
-          'https://swansoftwaresolutions.com/wp-content/uploads/2020/02/08.20.20-What-is-Dart-and-how-is-it-used-1.jpg',
-      'status': 'Complete',
-      'category': 'Mobile',
-      'mentor': 'Alicia Decker',
-      'modules': {
-        'Syntax and Basics': 'Completed',
-        'OOP in Dart': 'Completed',
-        'Asynchronous Programming': 'Completed',
-      },
-      'description':
-          'Learn the fundamentals of Dart programming language, which is essential for Flutter development.',
-      'comments': [
-        {
-          'user': 'Bob',
-          'comment': 'The Dart course was very informative and well-structured.',
-        },
-      ],
-    },
-    {
-      'title': 'Python Basics',
-      'subtitle': 'Learn the Fundamentals of Python',
-      'ImgURL':
-          'https://4kwallpapers.com/images/wallpapers/python-programming-3840x2160-16102.jpg',
-      'status': 'In Progress',
-      'category': 'Backend',
-      'mentor': 'Jane Smith',
-      'modules': {
-        'Introduction to Python': 'Completed',
-        'Data Structures': 'In Progress',
-        'Functions and Modules': 'Not Started',
-      },
-      'description':
-          'This course introduces the basics of Python programming, covering syntax, data structures, and functions.',
-      'comments': [
-        {
-          'user': 'Charlie',
-          'comment': 'Python is such a versatile language. Loving the course!',
-        },
-      ],
-    },
-    {
-      'title': 'HTML & CSS',
-      'subtitle': 'Build beautiful web pages',
-      'ImgURL': 'https://img-c.udemycdn.com/course/750x422/5852582_cafb_3.jpg',
-      'status': 'Upcoming',
-      'category': 'Frontend',
-      'mentor': 'Andrew Wilson',
-      'modules': {
-        'HTML Basics': 'Not Started',
-        'CSS Fundamentals': 'Not Started',
-        'Responsive Design': 'Not Started',
-      },
-      'description':
-          'Learn how to create stunning web pages using HTML and CSS, covering everything from basic tags to advanced styling techniques.',
-      'comments': [],
-    },
-    {
-      'title': 'Node.js Essentials',
-      'subtitle': 'Backend development using Node.js',
-      'ImgURL':
-          'https://images.ctfassets.net/aq13lwl6616q/7cS8gBoWulxkWNWEm0FspJ/c7eb42dd82e27279307f8b9fc9b136fa/nodejs_cover_photo_smaller_size.png?w=500&fm=webp',
-      'status': 'In Progress',
-      'category': 'Backend',
-      'mentor': 'Brian Lee',
-      'modules': {
-        'Getting Started with Node.js': 'Completed',
-        'Working with Express': 'In Progress',
-        'Database Integration': 'Not Started',
-      },
-      'description':
-          'This course covers the essentials of backend development using Node.js, including server setup, routing, and database integration.',
-      'comments': [
-        {
-          'user': 'Diana',
-          'comment': 'Node.js course is very practical and hands-on. Loving it!',
-        },
-      ],
-    },
-  ];
-
-  /// Returns the list of courses filtered by search query and selected category.
-  List<Map<String, dynamic>> get filteredCourses {
-    return allCourses.where((course) {
-      final matchesSearch =
-          searchQuery.isEmpty ||
-          course['title'].toLowerCase().contains(searchQuery.toLowerCase()) ||
-          course['subtitle'].toLowerCase().contains(searchQuery.toLowerCase());
-      final matchesCategory =
-          selectedCategory == 'All' || course['category'] == selectedCategory;
-      return matchesSearch && matchesCategory;
-    }).toList();
-  }
-
-  /// List of available course categories
   List<String> get categories => ['All', 'Mobile', 'Backend', 'Frontend'];
 
   @override
@@ -152,7 +24,6 @@ class _CatalogPageState extends State<CatalogPage> {
         title: const Text('Catalog'),
         centerTitle: true,
         actions: [
-          // Toggles the visibility of the search bar
           IconButton(
             onPressed: () => setState(() => visibleSearch = !visibleSearch),
             icon: const Icon(Icons.search),
@@ -160,11 +31,10 @@ class _CatalogPageState extends State<CatalogPage> {
         ],
       ),
 
-      // Main page scroll view
       body: SingleChildScrollView(
         child: Column(
           children: [
-            // Animated search bar visibility
+            // 🔍 Search bar
             AnimatedSwitcher(
               duration: const Duration(milliseconds: 250),
               child: visibleSearch
@@ -179,7 +49,6 @@ class _CatalogPageState extends State<CatalogPage> {
                           suffixIcon: IconButton(
                             icon: const Icon(Icons.clear),
                             onPressed: () {
-                              // Clear search and hide search bar
                               setState(() {
                                 searchQuery = '';
                                 visibleSearch = false;
@@ -188,182 +57,233 @@ class _CatalogPageState extends State<CatalogPage> {
                           ),
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(12),
-                            borderSide: const BorderSide(
-                              color: Color(0xFF6A5ACD),
-                            ),
                           ),
                           contentPadding: const EdgeInsets.symmetric(
                             vertical: 12,
                             horizontal: 16,
                           ),
                         ),
-                        // Update search query when user types
                         onChanged: (value) =>
                             setState(() => searchQuery = value),
                       ),
                     )
-                  // Placeholder space when search bar is hidden
                   : const SizedBox(height: 20, key: ValueKey('emptySpace')),
             ),
 
-            const SizedBox(height: 10),
-
-            // Section: Featured courses (only shown when no search query)
-            if (searchQuery.isEmpty)
-              Column(
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 16),
-                    child: Align(
-                      alignment: Alignment.centerLeft,
-                      child: Text(
-                        'Featured Courses',
-                        style: TextStyle(
-                          fontSize: 20,
-                          fontWeight: FontWeight.w400,
-                        ),
-                      ),
-                    ),
-                  ),
-
-                  // Horizontal scroll view for featured courses
-                  SingleChildScrollView(
-                    scrollDirection: Axis.horizontal,
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 16,
-                        vertical: 10,
-                      ),
-                      child: Row(
-                        children: [
-                          for (var course in allCourses)
-                            Padding(
-                              padding: const EdgeInsets.only(
-                                right: 12,
-                                bottom: 10,
-                              ),
-                              child: SizedBox(
-                                height: 200,
-                                child: CourseCard(
-                                  title: course['title'] as String,
-                                  subtitle: course['subtitle'] as String,
-                                  imageUrl: course['ImgURL'] as String,
-                                  isVerticalLayout: true,
-                                  onTap: () {
-                                    // Navigate to detailed course page with fade animation
-                                    Navigator.of(context).push(
-                                      PageRouteBuilder(
-                                        transitionDuration: const Duration(
-                                          milliseconds: 350,
-                                        ),
-                                        pageBuilder: (_, __, ___) =>
-                                            CourseDetailPage(course: course),
-                                        transitionsBuilder:
-                                            (_, animation, __, child) =>
-                                                FadeTransition(
-                                          opacity: animation,
-                                          child: child,
-                                        ),
-                                      ),
-                                    );
-                                  },
-                                ),
-                              ),
-                            ),
-                        ],
-                      ),
-                    ),
-                  ),
-                ],
-              )
-            else
-              const SizedBox.shrink(),
-
-            // Category filter chips
+            // 🗂 Category filter
             Container(
               height: 40,
               padding: const EdgeInsets.symmetric(horizontal: 16),
               child: SingleChildScrollView(
                 scrollDirection: Axis.horizontal,
                 child: Row(
-                  children: categories
-                      .map(
-                        (category) => Padding(
-                          padding: const EdgeInsets.only(right: 8),
-                          child: ChoiceChip(
-                            label: Text(category),
-                            selected: selectedCategory == category,
-                            onSelected: (selected) =>
-                                setState(() => selectedCategory = category),
-                            selectedColor: Colors.blue[50],
-                            backgroundColor: Colors.grey[100],
-                          ),
-                        ),
-                      )
-                      .toList(),
+                  children: categories.map((category) {
+                    return Padding(
+                      padding: const EdgeInsets.only(right: 8),
+                      child: ChoiceChip(
+                        label: Text(category),
+                        selected: selectedCategory == category,
+                        onSelected: (selected) =>
+                            setState(() => selectedCategory = category),
+                        selectedColor: Colors.blue[50],
+                        backgroundColor: Colors.grey[100],
+                      ),
+                    );
+                  }).toList(),
                 ),
               ),
             ),
 
             const SizedBox(height: 10),
 
-            // Display filtered course list or "no results" message
-            filteredCourses.isEmpty
-                ? const Center(child: Text('No courses found'))
-                : Column(
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 16),
-                        child: Align(
-                          alignment: Alignment.centerLeft,
-                          child: Text(
-                            'Courses',
-                            style: TextStyle(
-                              fontSize: 20,
-                              fontWeight: FontWeight.w400,
+            // 📡 Fetch courses from Firestore
+            StreamBuilder<QuerySnapshot>(
+              stream: FirebaseFirestore.instance
+                  .collection('courses')
+                  .snapshots(),
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return const Padding(
+                    padding: EdgeInsets.all(40),
+                    child: Center(child: CircularProgressIndicator()),
+                  );
+                }
+
+                if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
+                  return const Center(child: Text('No courses found'));
+                }
+
+                // Parse Firestore data
+                List<Map<String, dynamic>> allCourses = snapshot.data!.docs.map(
+                  (doc) {
+                    return {
+                      'id': doc.id,
+                      ...doc.data() as Map<String, dynamic>,
+                    };
+                  },
+                ).toList();
+
+                // Separate featured courses
+                final featuredCourses = allCourses
+                    .where((course) => course['isFeatured'] == true)
+                    .toList();
+
+                // Apply search filter
+                List<Map<String, dynamic>> filteredCourses = allCourses.where((
+                  course,
+                ) {
+                  final matchesSearch =
+                      searchQuery.isEmpty ||
+                      (course['title'] ?? '').toString().toLowerCase().contains(
+                        searchQuery.toLowerCase(),
+                      ) ||
+                      (course['subtitle'] ?? '')
+                          .toString()
+                          .toLowerCase()
+                          .contains(searchQuery.toLowerCase());
+
+                  final matchesCategory =
+                      selectedCategory == 'All' ||
+                      (course['category'] ?? '') == selectedCategory;
+
+                  return matchesSearch && matchesCategory;
+                }).toList();
+
+                return Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    // 🌟 Featured Courses (only if not searching)
+                    if (searchQuery.isEmpty && featuredCourses.isNotEmpty)
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const Padding(
+                            padding: EdgeInsets.symmetric(
+                              horizontal: 16,
+                              vertical: 8,
+                            ),
+                            child: Text(
+                              'Featured Courses',
+                              style: TextStyle(
+                                fontSize: 20,
+                                fontWeight: FontWeight.w500,
+                              ),
                             ),
                           ),
-                        ),
+                          SingleChildScrollView(
+                            scrollDirection: Axis.horizontal,
+                            child: Padding(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 16,
+                              ),
+                              child: Row(
+                                children: featuredCourses.map((course) {
+                                  return Padding(
+                                    padding: const EdgeInsets.only(right: 12),
+                                    child: SizedBox(
+                                      height: 200,
+                                      child: CourseCard(
+                                        title: course['title'] ?? 'Untitled',
+                                        subtitle: course['subtitle'] ?? '',
+                                        imageUrl: course['imageUrl'] ?? '',
+                                        isVerticalLayout: true,
+                                        onTap: () {
+                                          Navigator.of(context).push(
+                                            PageRouteBuilder(
+                                              transitionDuration:
+                                                  const Duration(
+                                                    milliseconds: 350,
+                                                  ),
+                                              pageBuilder: (_, __, ___) =>
+                                                  CourseDetailPage(
+                                                    course: course,
+                                                  ),
+                                              transitionsBuilder:
+                                                  (_, animation, __, child) =>
+                                                      FadeTransition(
+                                                        opacity: animation,
+                                                        child: child,
+                                                      ),
+                                            ),
+                                          );
+                                        },
+                                      ),
+                                    ),
+                                  );
+                                }).toList(),
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
 
-                      // Vertical list of filtered courses
-                      for (var course in filteredCourses)
-                        Padding(
-                          padding: const EdgeInsets.only(
-                            left: 12,
-                            right: 12,
-                            bottom: 10,
-                          ),
-                          child: SizedBox(
-                            height: 130,
-                            width: double.infinity,
-                            child: CourseCard(
-                              title: course['title'] as String,
-                              subtitle: course['subtitle'] as String,
-                              imageUrl: course['ImgURL'] as String,
-                              isVerticalLayout: false,
-                              onTap: () {
-                                // Navigate to detailed course page
-                                Navigator.of(context).push(
-                                  PageRouteBuilder(
-                                    transitionDuration:
-                                        const Duration(milliseconds: 350),
-                                    pageBuilder: (_, __, ___) =>
-                                        CourseDetailPage(course: course),
-                                    transitionsBuilder:
-                                        (_, animation, __, child) =>
-                                            FadeTransition(
-                                      opacity: animation,
-                                      child: child,
-                                    ),
-                                  ),
-                                );
-                              },
-                            ),
-                          ),
+                    // 📚 All Courses (Vertical list)
+                    const Padding(
+                      padding: EdgeInsets.symmetric(
+                        horizontal: 16,
+                        vertical: 10,
+                      ),
+                      child: Text(
+                        'All Courses',
+                        style: TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.w500,
                         ),
-                    ],
-                  ),
+                      ),
+                    ),
+
+                    if (filteredCourses.isEmpty)
+                      const Center(
+                        child: Padding(
+                          padding: EdgeInsets.all(20),
+                          child: Text('No matching courses found'),
+                        ),
+                      )
+                    else
+                      ListView.builder(
+                        itemCount: filteredCourses.length,
+                        physics: const NeverScrollableScrollPhysics(),
+                        shrinkWrap: true,
+                        itemBuilder: (context, index) {
+                          final course = filteredCourses[index];
+                          return Padding(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 12,
+                              vertical: 8,
+                            ),
+                            child: SizedBox(
+                              height: 130,
+                              child: CourseCard(
+                                title: course['title'] ?? 'Untitled',
+                                subtitle: course['subtitle'] ?? '',
+                                imageUrl: course['imageUrl'] ?? '',
+                                isVerticalLayout: false,
+                                onTap: () {
+                                  Navigator.of(context).push(
+                                    PageRouteBuilder(
+                                      transitionDuration: const Duration(
+                                        milliseconds: 350,
+                                      ),
+                                      pageBuilder: (_, __, ___) =>
+                                          CourseDetailPage(course: course),
+                                      transitionsBuilder:
+                                          (_, animation, __, child) =>
+                                              FadeTransition(
+                                                opacity: animation,
+                                                child: child,
+                                              ),
+                                    ),
+                                  );
+                                },
+                              ),
+                            ),
+                          );
+                        },
+                      ),
+                  ],
+                );
+              },
+            ),
           ],
         ),
       ),
