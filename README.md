@@ -55,12 +55,12 @@ lib/
 │ ├── progress_page.dart                                                                                            
 │ ├── register.dart                                                                                                 
 │ └── splash_screen.dart 
-├── models/
-| ├── user_model.dart
-| └── course_model.dart
-├── services/
-| ├── auth_service.dart
-| └── firestore_service.dart
+├── models/                                                                                                                  
+| ├── user_model.dart                                                                                                   
+| └── course_model.dart                                                                                                           
+├── services/                                                                                                        
+| ├── auth_service.dart                                                                                                         
+| └── firestore_service.dart                                                                                                  
 ├── widgets/                                                                                                       
 │ ├── course_card.dart                                                                                               
 │ ├── elevated_btn.dart                                                                                            
