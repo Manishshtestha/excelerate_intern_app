@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'feedback_page.dart';
 
-// Course Detail Page — displays detailed info for a selected course
+// Course Detail Page — displays detailed information about a selected course
 class CourseDetailPage extends StatefulWidget {
   final Map<String, dynamic> course; // Contains course data (title, modules, etc.)
 
@@ -13,24 +13,26 @@ class CourseDetailPage extends StatefulWidget {
 
 class _CourseDetailPageState extends State<CourseDetailPage> {
   final TextEditingController _commentController = TextEditingController();
-  bool isEnrolled = false; // Tracks enrollment status of user
+  bool isEnrolled = false; // Tracks whether the user is enrolled in the course
 
   @override
   void dispose() {
-    _commentController.dispose(); // Dispose controller to free memory
+    // Dispose the text controller to prevent memory leaks
+    _commentController.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    // Extract modules and comments from course map
+    // Extract course modules and comments from the provided course map
     final modules = widget.course['modules'] as Map<String, dynamic>;
     final comments = widget.course['comments'] as List<dynamic>;
 
     return Scaffold(
       body: CustomScrollView(
         slivers: [
-          // Collapsible AppBar with course image
+          // -------- AppBar Section --------
+          // Displays a collapsible header with the course image
           SliverAppBar(
             expandedHeight: 250,
             pinned: true,
@@ -38,17 +40,17 @@ class _CourseDetailPageState extends State<CourseDetailPage> {
               background: Stack(
                 fit: StackFit.expand,
                 children: [
-                  // Course image
+                  // Main course image
                   Image.network(
                     widget.course['imageUrl'],
                     fit: BoxFit.cover,
-                    // Fallback in case image fails to load
+                    // Fallback UI when image fails to load
                     errorBuilder: (context, error, stackTrace) => Container(
                       color: Colors.grey[300],
                       child: const Icon(Icons.image_not_supported, size: 50),
                     ),
                   ),
-                  // Gradient overlay (darkens bottom for readability)
+                  // Gradient overlay for better readability of text
                   Container(
                     decoration: BoxDecoration(
                       gradient: LinearGradient(
@@ -66,7 +68,7 @@ class _CourseDetailPageState extends State<CourseDetailPage> {
             ),
           ),
 
-          // Main course content
+          // -------- Main Content Section --------
           SliverToBoxAdapter(
             child: Padding(
               padding: const EdgeInsets.all(16),
@@ -93,15 +95,11 @@ class _CourseDetailPageState extends State<CourseDetailPage> {
                   ),
                   const SizedBox(height: 16),
 
-                  // Course Status Badge (e.g., "Upcoming", "Ongoing")
+                  // Status Badge (e.g., Ongoing, Upcoming)
                   Container(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 12,
-                      vertical: 6,
-                    ),
+                    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                     decoration: BoxDecoration(
-                      color: _getStatusColor(widget.course['status'])
-                          .withOpacity(0.2),
+                      color: _getStatusColor(widget.course['status']).withOpacity(0.2),
                       borderRadius: BorderRadius.circular(20),
                     ),
                     child: Text(
@@ -114,10 +112,10 @@ class _CourseDetailPageState extends State<CourseDetailPage> {
                   ),
                   const SizedBox(height: 20),
 
-                  // Instructor / Mentor Information
+                  // Instructor Information
                   Row(
                     children: [
-                      // Circular avatar showing first letter of mentor name
+                      // Circular avatar displaying the first letter of the mentor's name
                       CircleAvatar(
                         radius: 25,
                         backgroundColor: Colors.blue[100],
@@ -131,16 +129,13 @@ class _CourseDetailPageState extends State<CourseDetailPage> {
                         ),
                       ),
                       const SizedBox(width: 12),
-                      // Mentor name and label
+                      // Instructor label and name
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           const Text(
                             'Instructor',
-                            style: TextStyle(
-                              fontSize: 12,
-                              color: Colors.grey,
-                            ),
+                            style: TextStyle(fontSize: 12, color: Colors.grey),
                           ),
                           Text(
                             widget.course['mentor'],
@@ -155,13 +150,10 @@ class _CourseDetailPageState extends State<CourseDetailPage> {
                   ),
                   const SizedBox(height: 24),
 
-                  // Course Description
+                  // About Section
                   const Text(
                     'About this course',
-                    style: TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
-                    ),
+                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                   ),
                   const SizedBox(height: 12),
                   Text(
@@ -174,38 +166,29 @@ class _CourseDetailPageState extends State<CourseDetailPage> {
                   ),
                   const SizedBox(height: 24),
 
-                  // Course Modules List
+                  // Course Modules Section
                   const Text(
                     'Course Modules',
-                    style: TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
-                    ),
+                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                   ),
                   const SizedBox(height: 12),
 
-                  // Loop through all modules and display each
+                  // Generate module cards dynamically
                   ...modules.entries.map((module) {
-                    return _buildModuleItem(
-                      module.key,
-                      module.value,
-                    );
+                    return _buildModuleItem(module.key, module.value);
                   }).toList(),
 
                   const SizedBox(height: 24),
 
-                  // Student Feedback Section Title + Button
+                  // Student Feedback Section
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       const Text(
                         'Student Feedback',
-                        style: TextStyle(
-                          fontSize: 20,
-                          fontWeight: FontWeight.bold,
-                        ),
+                        style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                       ),
-                      // Button to navigate to Feedback Screen
+                      // Button to navigate to feedback submission page
                       ElevatedButton.icon(
                         onPressed: () {
                           Navigator.push(
@@ -232,21 +215,17 @@ class _CourseDetailPageState extends State<CourseDetailPage> {
                   ),
                   const SizedBox(height: 12),
 
-                  // Show message if no comments yet
+                  // Show feedback comments or a fallback message
                   if (comments.isEmpty)
                     Center(
                       child: Padding(
                         padding: const EdgeInsets.all(24),
                         child: Text(
                           'No feedback yet. Be the first to comment!',
-                          style: TextStyle(
-                            color: Colors.grey[500],
-                            fontSize: 14,
-                          ),
+                          style: TextStyle(color: Colors.grey[500], fontSize: 14),
                         ),
                       ),
                     )
-                  // Otherwise, show all comments
                   else
                     ...comments.map((comment) {
                       return _buildCommentItem(
@@ -263,13 +242,13 @@ class _CourseDetailPageState extends State<CourseDetailPage> {
         ],
       ),
 
-      // Bottom sticky button for enrollment
+      // -------- Enrollment Button Section --------
       bottomSheet: Container(
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
           color: Colors.white,
           boxShadow: [
-            // Top shadow for elevation effect
+            // Adds elevation effect
             BoxShadow(
               color: Colors.black.withOpacity(0.1),
               blurRadius: 10,
@@ -283,17 +262,18 @@ class _CourseDetailPageState extends State<CourseDetailPage> {
             height: 50,
             child: ElevatedButton(
               style: ElevatedButton.styleFrom(
-                backgroundColor: isEnrolled ? Colors.green :Theme.of(context).primaryColor,
+                backgroundColor:
+                    isEnrolled ? Colors.green : Theme.of(context).primaryColor,
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(12),
                 ),
               ),
-              // Toggle enrollment status
+              // Toggles enrollment state
               onPressed: () {
                 setState(() {
                   isEnrolled = !isEnrolled;
                 });
-                // Show feedback message
+                // Displays confirmation message
                 ScaffoldMessenger.of(context).showSnackBar(
                   SnackBar(
                     content: Text(
@@ -305,7 +285,7 @@ class _CourseDetailPageState extends State<CourseDetailPage> {
                   ),
                 );
               },
-              // Button text changes dynamically
+              // Button text dynamically changes based on enrollment
               child: Text(
                 isEnrolled ? 'Continue Learning' : 'Enroll Now',
                 style: const TextStyle(
@@ -321,7 +301,9 @@ class _CourseDetailPageState extends State<CourseDetailPage> {
     );
   }
 
-  // Builds each module box with title + status icon
+  // ---------- Helper Widgets ----------
+
+  // Builds a module card showing title and progress status
   Widget _buildModuleItem(String title, String status) {
     return Container(
       margin: const EdgeInsets.only(bottom: 12),
@@ -340,7 +322,7 @@ class _CourseDetailPageState extends State<CourseDetailPage> {
       ),
       child: Row(
         children: [
-          // Icon based on module status (complete, in progress, etc.)
+          // Status icon (e.g., checkmark for complete)
           Container(
             width: 40,
             height: 40,
@@ -355,7 +337,7 @@ class _CourseDetailPageState extends State<CourseDetailPage> {
             ),
           ),
           const SizedBox(width: 12),
-          // Module title and status
+          // Module title and progress text
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -384,7 +366,7 @@ class _CourseDetailPageState extends State<CourseDetailPage> {
     );
   }
 
-  // Builds each comment block with username + comment text
+  // Builds a single comment block with username and message
   Widget _buildCommentItem(String user, String comment) {
     return Container(
       margin: const EdgeInsets.only(bottom: 12),
@@ -436,7 +418,9 @@ class _CourseDetailPageState extends State<CourseDetailPage> {
     );
   }
 
-  // Returns color based on status (used for both module and course)
+  // ---------- Utility Methods ----------
+
+  // Determines color based on course or module status
   Color _getStatusColor(String status) {
     switch (status) {
       case 'Complete':
@@ -452,7 +436,7 @@ class _CourseDetailPageState extends State<CourseDetailPage> {
     }
   }
 
-  // Returns appropriate icon for module status
+  // Returns an icon corresponding to the module's status
   IconData _getModuleIcon(String status) {
     switch (status) {
       case 'Complete':
