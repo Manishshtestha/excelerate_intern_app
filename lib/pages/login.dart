@@ -3,6 +3,9 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:excelerate_intern_app/widgets/elevated_btn.dart';
 import 'package:excelerate_intern_app/widgets/input_field.dart';
 
+/// The `LoginPage` class provides a form for user authentication.
+/// Users can log in using their registered email and password.
+/// It includes form validation, loading state, and navigation upon success.
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
 
@@ -11,39 +14,50 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
-  final _formKey = GlobalKey<FormState>();
-  final _emailController = TextEditingController();
-  final _passwordController = TextEditingController();
-  bool _isLoading = false;
+  // ---------- Controllers & Form Key ----------
+  final _formKey = GlobalKey<FormState>(); // Tracks and validates form fields
+  final _emailController = TextEditingController(); // Stores email input
+  final _passwordController = TextEditingController(); // Stores password input
 
+  bool _isLoading = false; // Indicates when login is in progress
+
+  // ---------- Lifecycle ----------
   @override
   void dispose() {
+    // Clean up controllers to prevent memory leaks
     _emailController.dispose();
     _passwordController.dispose();
     super.dispose();
   }
 
+  // ---------- Login Function ----------
+  /// Authenticates the user using Firebase Authentication.
+  /// Displays error messages for invalid credentials or failed attempts.
   Future<void> _login() async {
-    if (!_formKey.currentState!.validate()) return;
+    if (!_formKey.currentState!.validate()) return; // Validate form inputs
 
-    setState(() => _isLoading = true);
+    setState(() => _isLoading = true); // Show loading spinner
 
     try {
+      // Attempt login using Firebase email/password authentication
       final credential = await FirebaseAuth.instance.signInWithEmailAndPassword(
         email: _emailController.text.trim(),
         password: _passwordController.text.trim(),
       );
 
       final user = credential.user;
+
+      // If login is successful, navigate to BottomNav page
       if (user != null) {
         if (mounted) {
           Navigator.pushReplacementNamed(context, '/bottomnav');
-          ScaffoldMessenger.of(
-            context,
-          ).showSnackBar(const SnackBar(content: Text('Login Successful')));
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Login Successful')),
+          );
         }
       }
     } on FirebaseAuthException catch (e) {
+      // Handle different authentication errors
       String message;
       switch (e.code) {
         case 'invalid-email':
@@ -58,17 +72,22 @@ class _LoginPageState extends State<LoginPage> {
         default:
           message = 'Login failed. Please try again.';
       }
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(SnackBar(content: Text(message)));
+
+      // Show error message in a snackbar
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(message)),
+      );
     } finally {
+      // Stop loading spinner
       if (mounted) setState(() => _isLoading = false);
     }
   }
 
+  // ---------- UI ----------
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      // -------- AppBar --------
       appBar: AppBar(
         title: const Text(
           'Level up',
@@ -76,6 +95,8 @@ class _LoginPageState extends State<LoginPage> {
         ),
         centerTitle: true,
       ),
+
+      // -------- Main Body --------
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.all(16),
@@ -83,14 +104,17 @@ class _LoginPageState extends State<LoginPage> {
             key: _formKey,
             child: Column(
               children: [
+                // ---------- Login Form Section ----------
                 Expanded(
                   child: Center(
                     child: _isLoading
+                        // Loading indicator when login is processing
                         ? const CircularProgressIndicator()
                         : Column(
                             mainAxisSize: MainAxisSize.min,
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
+                              // Page Title
                               const Center(
                                 child: Text(
                                   'Login',
@@ -103,7 +127,7 @@ class _LoginPageState extends State<LoginPage> {
                               ),
                               const SizedBox(height: 40),
 
-                              // Email input
+                              // ---------- Email Input Field ----------
                               InputField(
                                 label: 'Email',
                                 hint: 'Enter your email',
@@ -114,16 +138,15 @@ class _LoginPageState extends State<LoginPage> {
                                   if (value == null || value.trim().isEmpty) {
                                     return 'Email is required';
                                   }
-                                  if (!RegExp(
-                                    r'^[^@]+@[^@]+\.[^@]+',
-                                  ).hasMatch(value)) {
+                                  if (!RegExp(r'^[^@]+@[^@]+\.[^@]+')
+                                      .hasMatch(value)) {
                                     return 'Enter a valid email address';
                                   }
                                   return null;
                                 },
                               ),
 
-                              // Password input
+                              // ---------- Password Input Field ----------
                               InputField(
                                 label: 'Password',
                                 hint: 'Enter your password',
@@ -144,6 +167,7 @@ class _LoginPageState extends State<LoginPage> {
 
                               const SizedBox(height: 20),
 
+                              // ---------- Login Button ----------
                               ElevatedBtn(
                                 text: 'Login',
                                 onPressed: _isLoading ? null : _login,
@@ -153,7 +177,7 @@ class _LoginPageState extends State<LoginPage> {
                   ),
                 ),
 
-                // Register link
+                // ---------- Register Redirect ----------
                 Center(
                   child: GestureDetector(
                     onTap: () => Navigator.pushNamed(context, '/register'),
