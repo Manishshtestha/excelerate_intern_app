@@ -1,64 +1,84 @@
 import 'package:flutter/material.dart';
 
-// A reusable custom elevated button widget
-// Provides customization for color, text, border radius, and padding
+/// A reusable custom elevated button widget.
+/// Provides customization options such as:
+/// - background color
+/// - text color
+/// - border radius
+/// - vertical padding
+/// This helps maintain consistency and reusability across the app.
 class ElevatedBtn extends StatelessWidget {
-  final String text; // Text displayed on the button
-  final VoidCallback? onPressed; // Function executed when button is pressed
-  final Color? color; // Background color of the button
-  final Color? textColor; // Text color
-  final double borderRadius; // Rounds the button corners
-  final double padding; // Vertical padding for button size
+  // The text displayed on the button.
+  final String text;
 
+  // The function executed when the button is pressed.
+  final VoidCallback? onPressed;
+
+  // The background color of the button.
+  final Color? color;
+
+  // The color of the button text.
+  final Color? textColor;
+
+  // Determines how rounded the corners of the button are.
+  final double borderRadius;
+
+  // Vertical padding to control button height.
+  final double padding;
+
+  /// Constructor with default values for borderRadius and padding.
   const ElevatedBtn({
     super.key,
     required this.text,
     this.onPressed,
-    this.color, // Default button color
-    this.textColor, // Default text color
-    this.borderRadius = 12, // Default rounded corners
-    this.padding = 16, // Default padding
+    this.color,
+    this.textColor,
+    this.borderRadius = 12,
+    this.padding = 16,
   });
 
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      width: double.infinity, // Makes button take full available width
+      // Makes the button expand to take the full available width.
+      width: double.infinity,
       child: Padding(
-        // Adds padding around the button for spacing from edges
+        // Adds padding around the button to prevent it from sticking
+        // to screen edges or other widgets.
         padding: const EdgeInsetsDirectional.only(
           start: 12,
           end: 12,
           bottom: 8,
         ),
 
-        // The main ElevatedButton widget
+        // The main ElevatedButton widget with customizable styling.
         child: ElevatedButton(
-          // Styling for the button
           style: ElevatedButton.styleFrom(
-            backgroundColor:
-                color ??
-                Theme.of(context).primaryColor, // Button background color
-            foregroundColor: textColor ?? Colors.white, // Text/icon color
-            padding: EdgeInsets.symmetric(
-              vertical: padding,
-            ), // Vertical padding
+            // Sets background color. Uses provided color or defaults to
+            // app theme's primary color.
+            backgroundColor: color ?? Theme.of(context).primaryColor,
+
+            // Sets text and icon color.
+            foregroundColor: textColor ?? Colors.white,
+
+            // Adds vertical padding to adjust button height.
+            padding: EdgeInsets.symmetric(vertical: padding),
+
+            // Applies rounded corners using borderRadius.
             shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(
-                borderRadius,
-              ), // Rounded corners
+              borderRadius: BorderRadius.circular(borderRadius),
             ),
           ),
 
-          // Action performed when button is pressed
+          // Executes provided function when pressed.
           onPressed: onPressed,
 
-          // Button label text
+          // Button label text with bold style and readable size.
           child: Text(
             text,
             style: const TextStyle(
-              fontSize: 16, // Font size for button text
-              fontWeight: FontWeight.bold, // Bold text
+              fontSize: 16,
+              fontWeight: FontWeight.bold,
             ),
           ),
         ),
