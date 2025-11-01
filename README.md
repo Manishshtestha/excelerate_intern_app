@@ -8,6 +8,21 @@
 ![Firebase](https://img.shields.io/badge/Firebase-Enabled-orange)
 ![License: MIT](https://img.shields.io/badge/License-MIT-green)
 
+## Table of Contents
+- [Project Overview](#project-overview)
+- [Problem Statement](#problem-statement)
+- [Proposed Features](#proposed-features)
+- [App Screens](#app-screens)
+- [Tech Stack](#tech-stack)
+- [App Architecture](#app-architecture)
+- [Project Structure](#project-structure)
+- [Dependencies](#dependencies)
+- [Getting Started](#getting-started)
+- [Usage](#usage)
+- [Future Enhancements](#future-enhancements)
+- [Contributors](#contributors)
+- [License](#license)
+- [Acknowledgments](#acknowledgments)
 
 
 ## Project Overview
