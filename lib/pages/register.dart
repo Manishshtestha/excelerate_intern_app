@@ -5,6 +5,7 @@ import 'package:excelerate_intern_app/widgets/input_field.dart';
 import 'package:excelerate_intern_app/models/user_model.dart';
 import 'package:excelerate_intern_app/services/firestore_service.dart';
 
+// Registration screen where users create an account
 class RegisterPage extends StatefulWidget {
   const RegisterPage({super.key});
 
@@ -13,12 +14,18 @@ class RegisterPage extends StatefulWidget {
 }
 
 class _RegisterPageState extends State<RegisterPage> {
+  // Key used to validate the registration form
   final _formKey = GlobalKey<FormState>();
+
+  // Controllers to capture user input for email, password, and name
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   final _nameController = TextEditingController();
+
+  // Tracks loading state while registering
   bool _isLoading = false;
 
+  // Dispose controllers to free resources when widget is destroyed
   @override
   void dispose() {
     _emailController.dispose();
@@ -27,12 +34,16 @@ class _RegisterPageState extends State<RegisterPage> {
     super.dispose();
   }
 
+  // Main function to handle user registration
   Future<void> register() async {
+    // Validate form fields first
     if (!_formKey.currentState!.validate()) return;
 
+    // Show loading spinner
     setState(() => _isLoading = true);
 
     try {
+      // Create new user in Firebase Authentication
       final credential = await FirebaseAuth.instance
           .createUserWithEmailAndPassword(
             email: _emailController.text.trim(),
@@ -41,8 +52,10 @@ class _RegisterPageState extends State<RegisterPage> {
 
       final user = credential.user;
       if (user != null) {
+        // Update display name in Firebase profile
         await user.updateDisplayName(_nameController.text.trim());
 
+        // Create user model to store in Firestore
         final userModel = UserModel(
           uid: user.uid,
           email: user.email!,
@@ -50,8 +63,10 @@ class _RegisterPageState extends State<RegisterPage> {
           createdAt: DateTime.now(),
         );
 
+        // Save user data to Firestore using service class
         await FirestoreService.createUser(userModel);
 
+        // Navigate to BottomNav screen after successful registration
         if (mounted) {
           Navigator.pushReplacementNamed(context, '/bottomnav');
           ScaffoldMessenger.of(context).showSnackBar(
@@ -60,6 +75,7 @@ class _RegisterPageState extends State<RegisterPage> {
         }
       }
     } on FirebaseAuthException catch (e) {
+      // Handle specific Firebase registration errors
       String message;
       switch (e.code) {
         case 'email-already-in-use':
@@ -74,10 +90,12 @@ class _RegisterPageState extends State<RegisterPage> {
         default:
           message = 'Registration failed. Please try again.';
       }
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(SnackBar(content: Text(message)));
+
+      // Display error message in a SnackBar
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text(message)));
     } finally {
+      // Stop loading indicator
       if (mounted) setState(() => _isLoading = false);
     }
   }
@@ -85,6 +103,7 @@ class _RegisterPageState extends State<RegisterPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      // App bar with title
       appBar: AppBar(
         title: const Text(
           'Level up',
@@ -92,21 +111,25 @@ class _RegisterPageState extends State<RegisterPage> {
         ),
         centerTitle: true,
       ),
+
+      // Main body of the registration form
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.all(16),
           child: Form(
-            key: _formKey,
+            key: _formKey, // Link form key to validate inputs
             child: Column(
               children: [
                 Expanded(
                   child: Center(
+                    // Show spinner while loading, else show form
                     child: _isLoading
                         ? const CircularProgressIndicator()
                         : Column(
                             mainAxisSize: MainAxisSize.min,
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
+                              // Title
                               const Center(
                                 child: Text(
                                   'Register',
@@ -118,7 +141,7 @@ class _RegisterPageState extends State<RegisterPage> {
                               ),
                               const SizedBox(height: 40),
 
-                              // Full Name
+                              // Full Name input field
                               InputField(
                                 label: 'Full Name',
                                 hint: 'Enter your full name',
@@ -133,7 +156,7 @@ class _RegisterPageState extends State<RegisterPage> {
                                 },
                               ),
 
-                              // Email
+                              // Email input field
                               InputField(
                                 label: 'Email',
                                 hint: 'Enter your email',
@@ -144,16 +167,16 @@ class _RegisterPageState extends State<RegisterPage> {
                                   if (value == null || value.isEmpty) {
                                     return 'Email is required';
                                   }
-                                  if (!RegExp(
-                                    r'^[^@]+@[^@]+\.[^@]+',
-                                  ).hasMatch(value)) {
+                                  // Simple regex for email format validation
+                                  if (!RegExp(r'^[^@]+@[^@]+\.[^@]+')
+                                      .hasMatch(value)) {
                                     return 'Enter a valid email address';
                                   }
                                   return null;
                                 },
                               ),
 
-                              // Password
+                              // Password input field with strong validation
                               InputField(
                                 label: 'Password',
                                 hint: 'Enter your password',
@@ -168,16 +191,17 @@ class _RegisterPageState extends State<RegisterPage> {
                                   if (value.length < 6) {
                                     return 'Password must be at least 6 characters long';
                                   }
-                                  if(!value.contains(RegExp(r'[A-Z]'))){
+                                  if (!value.contains(RegExp(r'[A-Z]'))) {
                                     return 'Password must contain at least one uppercase letter';
                                   }
-                                  if(!value.contains(RegExp(r'[a-z]'))){
+                                  if (!value.contains(RegExp(r'[a-z]'))) {
                                     return 'Password must contain at least one lowercase letter';
                                   }
-                                  if(!value.contains(RegExp(r'[0-9]'))){
+                                  if (!value.contains(RegExp(r'[0-9]'))) {
                                     return 'Password must contain at least one number';
                                   }
-                                  if(!value.contains(RegExp(r'[!@#$%^&*(),.?":{}|<>]'))){
+                                  if (!value.contains(
+                                      RegExp(r'[!@#$%^&*(),.?":{}|<>]'))) {
                                     return 'Password must contain at least one special character';
                                   }
                                   return null;
@@ -186,6 +210,7 @@ class _RegisterPageState extends State<RegisterPage> {
 
                               const SizedBox(height: 20),
 
+                              // Register button
                               ElevatedBtn(
                                 text: 'Register',
                                 onPressed: _isLoading ? null : register,
@@ -194,6 +219,8 @@ class _RegisterPageState extends State<RegisterPage> {
                           ),
                   ),
                 ),
+
+                // Link to Login page if user already has an account
                 GestureDetector(
                   onTap: () => Navigator.pushNamed(context, '/login'),
                   child: const Text.rich(
