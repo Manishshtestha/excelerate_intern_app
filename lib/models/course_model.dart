@@ -1,18 +1,45 @@
+// Model class to represent a Course in the app
 class CourseModel {
+  // Unique identifier for the course
   final String id;
+
+  // Title or name of the course
   final String title;
+
+  // Detailed description of the course content
   final String description;
+
+  // Name of the instructor or trainer for the course
   final String instructor;
+
+  // URL of the course image or thumbnail
   final String imageUrl;
+
+  // List of topics covered in the course
   final List<String> topics;
-  final int duration; // in hours
-  final String difficulty; // Beginner, Intermediate, Advanced
+
+  // Duration of the course in hours
+  final int duration;
+
+  // Level of difficulty (Beginner, Intermediate, Advanced)
+  final String difficulty;
+
+  // Average rating given by students
   final double rating;
+
+  // Total number of students enrolled
   final int totalStudents;
+
+  // Date and time when the course was created
   final DateTime createdAt;
+
+  // Indicates if the course is currently active
   final bool isActive;
+
+  // Indicates if the course is featured on the platform
   final bool isFeatured;
 
+  // Constructor with required parameters and optional defaults
   CourseModel({
     required this.id,
     required this.title,
@@ -25,11 +52,11 @@ class CourseModel {
     required this.rating,
     required this.totalStudents,
     required this.createdAt,
-    this.isActive = true,
+    this.isActive = true, // Default value true
     required this.isFeatured,
   });
 
-  // Convert CourseModel to Map for Firestore
+  // Convert CourseModel object into a Map for storing in Firestore
   Map<String, dynamic> toMap() {
     return {
       'id': id,
@@ -42,13 +69,13 @@ class CourseModel {
       'difficulty': difficulty,
       'rating': rating,
       'totalStudents': totalStudents,
-      'createdAt': createdAt.toIso8601String(),
+      'createdAt': createdAt.toIso8601String(), // Store date as string
       'isActive': isActive,
       'isFeatured': isFeatured,
     };
   }
 
-  // Create CourseModel from Firestore document
+  // Factory constructor to create a CourseModel object from a Firestore Map
   factory CourseModel.fromMap(Map<String, dynamic> map) {
     return CourseModel(
       id: map['id'] ?? '',
@@ -69,7 +96,7 @@ class CourseModel {
     );
   }
 
-  // Create a copy of CourseModel with updated fields
+  // Create a modified copy of an existing CourseModel object
   CourseModel copyWith({
     String? id,
     String? title,
