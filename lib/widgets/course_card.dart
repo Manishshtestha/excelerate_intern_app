@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 
-// A reusable widget that displays a course card
-// It supports both vertical and horizontal layouts.
+/// A reusable widget that displays a course card.
+/// It supports both vertical and horizontal layouts and can trigger an action when tapped.
 class CourseCard extends StatelessWidget {
   final String title; // Title of the course
-  final String subtitle; // Subtitle or short description
-  final String imageUrl; // URL of the course image
-  final bool isVerticalLayout; // To toggle between vertical or horizontal layout
-  final VoidCallback? onTap; // Optional callback when the card is tapped
+  final String subtitle; // Subtitle or short description of the course
+  final String imageUrl; // URL for the course thumbnail or image
+  final bool isVerticalLayout; // Controls whether the layout is vertical or horizontal
+  final VoidCallback? onTap; // Optional callback triggered when the card is tapped
 
   const CourseCard({
     super.key,
@@ -21,15 +21,15 @@ class CourseCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      // Detects tap gesture on the card
+      // Detects tap gestures and executes the callback function
       onTap: onTap,
       child: Container(
         width: 280,
         decoration: BoxDecoration(
-          color: Colors.white, // Card background color
-          borderRadius: BorderRadius.circular(16), // Rounded corners
+          color: Colors.white, // Sets background color of the card
+          borderRadius: BorderRadius.circular(16), // Adds rounded corners
           boxShadow: const [
-            // Adds soft shadow for elevation effect
+            // Adds shadow effect to give depth
             BoxShadow(
               color: Colors.black12,
               blurRadius: 6,
@@ -38,13 +38,13 @@ class CourseCard extends StatelessWidget {
           ],
         ),
 
-        // Conditional layout based on isVerticalLayout flag
+        // The widget layout changes depending on the isVerticalLayout flag
         child: isVerticalLayout
-            // ----- Vertical Layout -----
+            // ------------------- Vertical Layout -------------------
             ? Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  // Top image section
+                  // Top section with course image
                   ClipRRect(
                     borderRadius: const BorderRadius.vertical(
                       top: Radius.circular(16),
@@ -54,7 +54,7 @@ class CourseCard extends StatelessWidget {
                       height: 120,
                       width: double.infinity,
                       fit: BoxFit.cover,
-                      // Fallback widget if image fails to load
+                      // If the image fails to load, show a placeholder
                       errorBuilder: (context, error, stackTrace) => Container(
                         height: 120,
                         color: Colors.grey[200],
@@ -63,13 +63,13 @@ class CourseCard extends StatelessWidget {
                     ),
                   ),
 
-                  // Text section below image
+                  // Bottom section with title and subtitle
                   Padding(
                     padding: const EdgeInsets.fromLTRB(12, 12, 12, 16),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        // Course title
+                        // Displays the course title
                         Text(
                           title,
                           style: const TextStyle(
@@ -81,7 +81,7 @@ class CourseCard extends StatelessWidget {
                         ),
                         const SizedBox(height: 6),
 
-                        // Course subtitle
+                        // Displays the course subtitle or short description
                         Text(
                           subtitle,
                           style: const TextStyle(
@@ -97,18 +97,18 @@ class CourseCard extends StatelessWidget {
                 ],
               )
 
-            // ----- Horizontal Layout -----
+            // ------------------- Horizontal Layout -------------------
             : Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // Text section (on the left side)
+                  // Left section: text (title and subtitle)
                   Expanded(
                     child: Padding(
                       padding: const EdgeInsets.all(16),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          // Course title
+                          // Displays the course title
                           Text(
                             title,
                             style: const TextStyle(
@@ -120,7 +120,7 @@ class CourseCard extends StatelessWidget {
                           ),
                           const SizedBox(height: 6),
 
-                          // Course subtitle
+                          // Displays the course subtitle
                           Text(
                             subtitle,
                             style: const TextStyle(
@@ -137,7 +137,7 @@ class CourseCard extends StatelessWidget {
 
                   const SizedBox(width: 12),
 
-                  // Image section (on the right side)
+                  // Right section: course image
                   ClipRRect(
                     borderRadius: BorderRadius.circular(12),
                     child: Image.network(
@@ -145,7 +145,7 @@ class CourseCard extends StatelessWidget {
                       width: 160,
                       height: 120,
                       fit: BoxFit.cover,
-                      // Fallback if image fails to load
+                      // If the image fails to load, display a placeholder
                       errorBuilder: (context, error, stackTrace) => Container(
                         width: 200,
                         height: 80,
