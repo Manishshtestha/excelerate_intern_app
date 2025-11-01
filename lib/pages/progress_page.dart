@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+/// ProgressPage — Displays the user's learning statistics,
+/// including enrolled courses, completion progress, and goals.
 class ProgressPage extends StatefulWidget {
   const ProgressPage({super.key});
 
@@ -8,7 +10,7 @@ class ProgressPage extends StatefulWidget {
 }
 
 class _ProgressPageState extends State<ProgressPage> {
-  // Mock data - replace with real data from state management
+  // Mock data — In a real app, this would come from Firebase or a state manager
   final List<Map<String, dynamic>> enrolledCourses = [
     {
       'title': 'Flutter Basics',
@@ -46,18 +48,26 @@ class _ProgressPageState extends State<ProgressPage> {
 
   @override
   Widget build(BuildContext context) {
+    // --- Calculate progress summary stats ---
     final totalCourses = enrolledCourses.length;
-    final completedCourses = enrolledCourses.where((c) => c['progress'] == 1.0).length;
+    final completedCourses =
+        enrolledCourses.where((c) => c['progress'] == 1.0).length;
     final inProgressCourses = totalCourses - completedCourses;
+
+    // Total hours spent across all courses
     final totalHours = enrolledCourses.fold<double>(
       0,
-          (sum, course) => sum + course['hoursSpent'],
+      (sum, course) => sum + course['hoursSpent'],
     );
-    final overallProgress = enrolledCourses.fold<double>(
-      0,
-          (sum, course) => sum + course['progress'],
-    ) / totalCourses;
 
+    // Overall average progress (0 to 1)
+    final overallProgress = enrolledCourses.fold<double>(
+          0,
+          (sum, course) => sum + course['progress'],
+        ) /
+        totalCourses;
+
+    // --- Main Page Layout ---
     return Scaffold(
       appBar: AppBar(
         title: const Text('My Progress'),
@@ -65,17 +75,19 @@ class _ProgressPageState extends State<ProgressPage> {
         actions: [
           IconButton(
             onPressed: () {
-              // Filter or sort options
+              // Option for filtering or sorting courses (to be implemented)
             },
             icon: const Icon(Icons.filter_list),
           ),
         ],
       ),
+
+      // Scrollable page
       body: SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Overall Statistics Card
+            // 🔵 Overall Statistics Section
             Container(
               margin: const EdgeInsets.all(16),
               padding: const EdgeInsets.all(20),
@@ -105,22 +117,20 @@ class _ProgressPageState extends State<ProgressPage> {
                     ),
                   ),
                   const SizedBox(height: 16),
+
+                  // Circular progress indicator showing overall % completion
                   SizedBox(
                     width: 120,
                     height: 120,
                     child: Stack(
                       alignment: Alignment.center,
                       children: [
-                        SizedBox(
-                          width: 120,
-                          height: 120,
-                          child: CircularProgressIndicator(
-                            value: overallProgress,
-                            strokeWidth: 10,
-                            backgroundColor: Colors.white.withOpacity(0.3),
-                            valueColor: const AlwaysStoppedAnimation<Color>(
-                              Colors.white,
-                            ),
+                        CircularProgressIndicator(
+                          value: overallProgress,
+                          strokeWidth: 10,
+                          backgroundColor: Colors.white.withOpacity(0.3),
+                          valueColor: const AlwaysStoppedAnimation<Color>(
+                            Colors.white,
                           ),
                         ),
                         Column(
@@ -146,32 +156,23 @@ class _ProgressPageState extends State<ProgressPage> {
                       ],
                     ),
                   ),
+
                   const SizedBox(height: 20),
+
+                  // Summary stats row (total, completed, hours)
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
-                      _buildStatItem(
-                        Icons.book_outlined,
-                        '$totalCourses',
-                        'Enrolled',
-                      ),
-                      _buildStatItem(
-                        Icons.check_circle_outline,
-                        '$completedCourses',
-                        'Completed',
-                      ),
-                      _buildStatItem(
-                        Icons.access_time,
-                        '${totalHours.toInt()}h',
-                        'Learning',
-                      ),
+                      _buildStatItem(Icons.book_outlined, '$totalCourses', 'Enrolled'),
+                      _buildStatItem(Icons.check_circle_outline, '$completedCourses', 'Completed'),
+                      _buildStatItem(Icons.access_time, '${totalHours.toInt()}h', 'Learning'),
                     ],
                   ),
                 ],
               ),
             ),
 
-            // Quick Stats Row
+            // 🟠 Quick Stats Cards (In progress, weekly)
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16),
               child: Row(
@@ -199,7 +200,7 @@ class _ProgressPageState extends State<ProgressPage> {
 
             const SizedBox(height: 24),
 
-            // Course Progress List
+            // 🧭 Course Progress Header
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16),
               child: Row(
@@ -207,14 +208,11 @@ class _ProgressPageState extends State<ProgressPage> {
                 children: [
                   const Text(
                     'Course Progress',
-                    style: TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
-                    ),
+                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                   ),
                   TextButton(
                     onPressed: () {
-                      // View all courses
+                      // Navigate to detailed course list (to be implemented)
                     },
                     child: const Text('View All'),
                   ),
@@ -222,6 +220,7 @@ class _ProgressPageState extends State<ProgressPage> {
               ),
             ),
 
+            // 📘 List of enrolled courses and progress bars
             ListView.builder(
               shrinkWrap: true,
               physics: const NeverScrollableScrollPhysics(),
@@ -235,7 +234,7 @@ class _ProgressPageState extends State<ProgressPage> {
 
             const SizedBox(height: 24),
 
-            // Weekly Goal Section
+            // 🏆 Weekly Goal Section
             Padding(
               padding: const EdgeInsets.all(16),
               child: Container(
@@ -267,6 +266,8 @@ class _ProgressPageState extends State<ProgressPage> {
                       style: TextStyle(fontSize: 14),
                     ),
                     const SizedBox(height: 12),
+
+                    // Weekly progress bar
                     ClipRRect(
                       borderRadius: BorderRadius.circular(8),
                       child: LinearProgressIndicator(
@@ -281,10 +282,7 @@ class _ProgressPageState extends State<ProgressPage> {
                     const SizedBox(height: 8),
                     const Text(
                       '8 of 10 hours completed',
-                      style: TextStyle(
-                        fontSize: 12,
-                        color: Colors.grey,
-                      ),
+                      style: TextStyle(fontSize: 12, color: Colors.grey),
                     ),
                   ],
                 ),
@@ -298,6 +296,7 @@ class _ProgressPageState extends State<ProgressPage> {
     );
   }
 
+  // --- Helper Widget: Stat Item inside overall progress card ---
   Widget _buildStatItem(IconData icon, String value, String label) {
     return Column(
       children: [
@@ -313,21 +312,19 @@ class _ProgressPageState extends State<ProgressPage> {
         ),
         Text(
           label,
-          style: const TextStyle(
-            color: Colors.white,
-            fontSize: 12,
-          ),
+          style: const TextStyle(color: Colors.white, fontSize: 12),
         ),
       ],
     );
   }
 
+  // --- Helper Widget: Quick Statistic Card (small info boxes) ---
   Widget _buildQuickStatCard(
-      String label,
-      String value,
-      IconData icon,
-      Color color,
-      ) {
+    String label,
+    String value,
+    IconData icon,
+    Color color,
+  ) {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
@@ -344,6 +341,7 @@ class _ProgressPageState extends State<ProgressPage> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          // Icon in colored background
           Container(
             padding: const EdgeInsets.all(8),
             decoration: BoxDecoration(
@@ -355,24 +353,19 @@ class _ProgressPageState extends State<ProgressPage> {
           const SizedBox(height: 12),
           Text(
             value,
-            style: const TextStyle(
-              fontSize: 24,
-              fontWeight: FontWeight.bold,
-            ),
+            style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
           ),
           const SizedBox(height: 4),
           Text(
             label,
-            style: TextStyle(
-              fontSize: 12,
-              color: Colors.grey[600],
-            ),
+            style: TextStyle(fontSize: 12, color: Colors.grey[600]),
           ),
         ],
       ),
     );
   }
 
+  // --- Helper Widget: Individual Course Progress Card ---
   Widget _buildCourseProgressCard(Map<String, dynamic> course) {
     final progress = course['progress'] as double;
     final isCompleted = progress == 1.0;
@@ -394,6 +387,7 @@ class _ProgressPageState extends State<ProgressPage> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          // Title + progress percentage
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -426,6 +420,8 @@ class _ProgressPageState extends State<ProgressPage> {
             ],
           ),
           const SizedBox(height: 12),
+
+          // Progress bar
           ClipRRect(
             borderRadius: BorderRadius.circular(8),
             child: LinearProgressIndicator(
@@ -438,6 +434,8 @@ class _ProgressPageState extends State<ProgressPage> {
             ),
           ),
           const SizedBox(height: 12),
+
+          // Course details: modules, time spent, last accessed
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -447,10 +445,7 @@ class _ProgressPageState extends State<ProgressPage> {
                   const SizedBox(width: 4),
                   Text(
                     '${course['completedModules']}/${course['totalModules']} modules',
-                    style: TextStyle(
-                      fontSize: 12,
-                      color: Colors.grey[600],
-                    ),
+                    style: TextStyle(fontSize: 12, color: Colors.grey[600]),
                   ),
                 ],
               ),
@@ -460,19 +455,13 @@ class _ProgressPageState extends State<ProgressPage> {
                   const SizedBox(width: 4),
                   Text(
                     '${course['hoursSpent']}h',
-                    style: TextStyle(
-                      fontSize: 12,
-                      color: Colors.grey[600],
-                    ),
+                    style: TextStyle(fontSize: 12, color: Colors.grey[600]),
                   ),
                 ],
               ),
               Text(
                 course['lastAccessed'],
-                style: TextStyle(
-                  fontSize: 12,
-                  color: Colors.grey[500],
-                ),
+                style: TextStyle(fontSize: 12, color: Colors.grey[500]),
               ),
             ],
           ),
