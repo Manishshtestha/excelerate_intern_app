@@ -19,7 +19,6 @@
 - [Dependencies](#dependencies)
 - [Getting Started](#getting-started)
 - [Usage](#usage)
-- [Future Enhancements](#future-enhancements)
 - [Contributors](#contributors)
 - [License](#license)
 - [Acknowledgments](#acknowledgments)
@@ -64,6 +63,17 @@ The Level-up app will include the following core features, designed to align wit
 - **Frontend**: Flutter (Dart)
 - **Backend**: Firebase (Authentication, Firestore for data storage)
 - **Other Tools**: Git for version control, potentially packages like `firebase_auth`, `cloud_firestore`, etc.
+
+  ## App Architecture
+
+The app follows a **clean and modular architecture**:
+
+- **UI Layer:** Flutter Widgets for responsive design.  
+- **State Management:** Provider for reactive state updates.  
+- **Data Layer:** Firebase Firestore for user, course, and progress data.  
+- **Authentication:** Firebase Auth for login and registration.  
+- **Service Layer:** Separate services for Firestore and Authentication logic.  
+
 
 ## Project Structure
 lib/                                                                                                                       
