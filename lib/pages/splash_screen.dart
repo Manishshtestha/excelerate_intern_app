@@ -25,32 +25,31 @@ class _SplashScreenState extends State<SplashScreen>
     _fadeController = AnimationController(
       vsync: this,
       duration: const Duration(seconds: 2),
-    )..forward(); // Starts animation immediately
+    )..forward(); // Start animation immediately
 
-    // Simulate a faster loading effect by increasing progress more quickly
+    // Simulate loading effect by updating progress periodically
     Timer.periodic(const Duration(milliseconds: 30), (timer) {
-      // Shorten the duration
       setState(() {
-        progress += 1; // Increase progress by 5% at a time
+        progress += 1; // Increment progress
 
         // When loading reaches 100%, stop timer and navigate to LoginPage
         if (progress >= 100) {
           progress = 100;
           timer.cancel();
 
-          // Smooth transition to LoginPage with fade animation
+          // Navigate to LoginPage with smooth fade transition
           Navigator.of(context).pushReplacement(
             PageRouteBuilder(
               pageBuilder: (context, animation, secondaryAnimation) =>
                   const LoginPage(),
               transitionsBuilder:
                   (context, animation, secondaryAnimation, child) {
-                    final fade = CurvedAnimation(
-                      parent: animation,
-                      curve: Curves.easeInOut,
-                    );
-                    return FadeTransition(opacity: fade, child: child);
-                  },
+                final fade = CurvedAnimation(
+                  parent: animation,
+                  curve: Curves.easeInOut,
+                );
+                return FadeTransition(opacity: fade, child: child);
+              },
               transitionDuration: const Duration(milliseconds: 800),
             ),
           );
@@ -61,7 +60,7 @@ class _SplashScreenState extends State<SplashScreen>
 
   @override
   void dispose() {
-    _fadeController.dispose(); // Dispose animation controller to free memory
+    _fadeController.dispose(); // Dispose animation controller to free resources
     super.dispose();
   }
 
@@ -69,7 +68,7 @@ class _SplashScreenState extends State<SplashScreen>
   Widget build(BuildContext context) {
     // Gradient used for text and progress bar
     final gradient = const LinearGradient(
-      colors: [Color(0xFFFF5C8D), Color(0xFFFF8C42)], // Pink → Orange
+      colors: [Color(0xFFFF5C8D), Color(0xFFFF8C42)],
       begin: Alignment.topLeft,
       end: Alignment.bottomRight,
     );
@@ -78,10 +77,10 @@ class _SplashScreenState extends State<SplashScreen>
       backgroundColor: Colors.black,
       body: Stack(
         children: [
-          // Background with randomly placed glowing circles
+          // Background with glowing circular pattern
           Positioned.fill(
             child: CustomPaint(
-              painter: GalaxyPainter(), // Draws the abstract background
+              painter: GalaxyPainter(), // Draws custom background
             ),
           ),
 
@@ -94,15 +93,19 @@ class _SplashScreenState extends State<SplashScreen>
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    // Gradient "LEVEL UP" text
+                    // App logo
                     Image.network(
                       'https://excelerateuserprofile.s3.ap-south-1.amazonaws.com/WebsiteImages/Excelerate_180_27.png',
                       height: 100,
                     ),
-                    Text(
+
+                    // Subtitle text
+                    const Text(
                       'presents',
                       style: TextStyle(fontSize: 20, color: Colors.white),
                     ),
+
+                    // Gradient “LEVEL UP” text
                     ShaderMask(
                       shaderCallback: (bounds) => gradient.createShader(bounds),
                       child: const Text(
@@ -118,7 +121,7 @@ class _SplashScreenState extends State<SplashScreen>
 
                     const SizedBox(height: 40),
 
-                    // Display percentage text (progress)
+                    // Progress percentage text
                     Text(
                       "${progress.toInt()}%",
                       style: const TextStyle(
@@ -140,7 +143,7 @@ class _SplashScreenState extends State<SplashScreen>
                       ),
                       alignment: Alignment.centerLeft,
                       child: FractionallySizedBox(
-                        widthFactor: progress / 100, // Progress fill percentage
+                        widthFactor: progress / 100, // Fill width by progress
                         child: Container(
                           decoration: BoxDecoration(
                             gradient: gradient,
@@ -152,7 +155,7 @@ class _SplashScreenState extends State<SplashScreen>
 
                     const SizedBox(height: 40),
 
-                    // Subtitle text
+                    // Welcome message
                     const Text(
                       "Welcome to the Level-UP learning platform!",
                       style: TextStyle(fontSize: 18, color: Colors.white),
@@ -161,7 +164,7 @@ class _SplashScreenState extends State<SplashScreen>
 
                     const SizedBox(height: 10),
 
-                    // Credit text
+                    // Developer credit
                     const Text(
                       "Built by Excelerate Flutter Mobile Development Interns",
                       style: TextStyle(fontSize: 14, color: Colors.white70),
@@ -178,7 +181,7 @@ class _SplashScreenState extends State<SplashScreen>
   }
 }
 
-// 🎆 Custom painter class for glowing circular background
+// Custom painter for creating glowing circular background
 class GalaxyPainter extends CustomPainter {
   final Random random = Random();
 
@@ -186,7 +189,7 @@ class GalaxyPainter extends CustomPainter {
   void paint(Canvas canvas, Size size) {
     final paint = Paint();
 
-    // Set of colors for the circles (soft glowing effect)
+    // Color palette for the glowing circles
     final colors = [
       const Color(0xFFFF5C8D),
       const Color(0xFFFF8C42),
@@ -194,21 +197,21 @@ class GalaxyPainter extends CustomPainter {
       const Color(0xFFFFA55B),
     ];
 
-    // Draw 30 random glowing circles
+    // Draw multiple random circles for glowing background effect
     for (int i = 0; i < 30; i++) {
       final color = colors[random.nextInt(colors.length)];
-      final radius = random.nextDouble() * 6 + 2; // Vary radius size
+      final radius = random.nextDouble() * 6 + 2; // Random circle size
       final offset = Offset(
         random.nextDouble() * size.width,
         random.nextDouble() * size.height,
       );
 
-      // Random opacity for more natural glow
+      // Apply random opacity for a soft glow
       paint.color = color.withOpacity(0.25 + random.nextDouble() * 0.4);
       canvas.drawCircle(offset, radius, paint);
     }
   }
 
   @override
-  bool shouldRepaint(CustomPainter oldDelegate) => true; // Always repaint
+  bool shouldRepaint(CustomPainter oldDelegate) => true;
 }
