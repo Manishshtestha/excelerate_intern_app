@@ -2,14 +2,16 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import '../models/user_model.dart';
 import '../models/course_model.dart';
 
+// FirestoreService handles all Firestore database operations for users and courses.
 class FirestoreService {
+  // Instance of Firestore used to perform database operations
   static final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
-  // Collection references
+  // Collection names
   static const String _usersCollection = 'users';
   static const String _coursesCollection = 'courses';
 
-  // Test Firestore connection
+  // Method to test Firestore connection
   static Future<bool> testConnection() async {
     try {
       await _firestore.collection('test').doc('test').get();
@@ -20,12 +22,13 @@ class FirestoreService {
     }
   }
 
-  // User operations
+  // Create a new user document in Firestore
   static Future<void> createUser(UserModel user) async {
     try {
       print('Creating user with UID: ${user.uid}');
       print('User data: ${user.toMap()}');
 
+      // Save user data using UID as document ID
       await _firestore
           .collection(_usersCollection)
           .doc(user.uid)
@@ -38,6 +41,7 @@ class FirestoreService {
     }
   }
 
+  // Fetch a user document from Firestore by UID
   static Future<UserModel?> getUser(String uid) async {
     try {
       final doc = await _firestore.collection(_usersCollection).doc(uid).get();
@@ -51,6 +55,7 @@ class FirestoreService {
     }
   }
 
+  // Update an existing user document
   static Future<void> updateUser(UserModel user) async {
     try {
       await _firestore
@@ -62,10 +67,12 @@ class FirestoreService {
     }
   }
 
+  // Enroll a user in a course by adding course ID to user's enrolledCourses list
   static Future<void> enrollInCourse(String userId, String courseId) async {
     try {
       final userDoc = _firestore.collection(_usersCollection).doc(userId);
 
+      // Transaction ensures data consistency
       await _firestore.runTransaction((transaction) async {
         final userSnapshot = await transaction.get(userDoc);
 
@@ -75,6 +82,7 @@ class FirestoreService {
             userData['enrolledCourses'] ?? [],
           );
 
+          // Add course only if not already enrolled
           if (!enrolledCourses.contains(courseId)) {
             enrolledCourses.add(courseId);
             transaction.update(userDoc, {'enrolledCourses': enrolledCourses});
@@ -86,6 +94,7 @@ class FirestoreService {
     }
   }
 
+  // Update a user's progress for a specific course
   static Future<void> updateCourseProgress(
     String userId,
     String courseId,
@@ -102,8 +111,9 @@ class FirestoreService {
           final courseProgress = Map<String, dynamic>.from(
             userData['courseProgress'] ?? {},
           );
-          courseProgress[courseId] = progress;
 
+          // Update progress value for the course
+          courseProgress[courseId] = progress;
           transaction.update(userDoc, {'courseProgress': courseProgress});
         }
       });
@@ -112,7 +122,7 @@ class FirestoreService {
     }
   }
 
-  // Course operations
+  // Create a new course document in Firestore
   static Future<void> createCourse(CourseModel course) async {
     try {
       await _firestore
@@ -124,6 +134,7 @@ class FirestoreService {
     }
   }
 
+  // Retrieve all active courses from Firestore
   static Future<List<CourseModel>> getAllCourses() async {
     try {
       final querySnapshot = await _firestore
@@ -140,6 +151,7 @@ class FirestoreService {
     }
   }
 
+  // Retrieve a single course by course ID
   static Future<CourseModel?> getCourse(String courseId) async {
     try {
       final doc = await _firestore
@@ -156,6 +168,7 @@ class FirestoreService {
     }
   }
 
+  // Retrieve all courses a user is enrolled in
   static Future<List<CourseModel>> getUserEnrolledCourses(String userId) async {
     try {
       final userDoc = await _firestore
@@ -172,6 +185,7 @@ class FirestoreService {
 
       if (enrolledCourseIds.isEmpty) return [];
 
+      // Fetch all courses where ID matches user's enrolled courses
       final querySnapshot = await _firestore
           .collection(_coursesCollection)
           .where(FieldPath.documentId, whereIn: enrolledCourseIds)
@@ -185,11 +199,9 @@ class FirestoreService {
     }
   }
 
-  // Stream operations for real-time updates
+  // Real-time stream for listening to changes in a user's data
   static Stream<UserModel?> getUserStream(String uid) {
-    return _firestore.collection(_usersCollection).doc(uid).snapshots().map((
-      doc,
-    ) {
+    return _firestore.collection(_usersCollection).doc(uid).snapshots().map((doc) {
       if (doc.exists) {
         return UserModel.fromMap(doc.data()!);
       }
@@ -197,6 +209,7 @@ class FirestoreService {
     });
   }
 
+  // Real-time stream for listening to changes in all active courses
   static Stream<List<CourseModel>> getCoursesStream() {
     return _firestore
         .collection(_coursesCollection)
@@ -210,4 +223,3 @@ class FirestoreService {
         });
   }
 }
-  
