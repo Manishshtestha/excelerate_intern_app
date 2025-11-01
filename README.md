@@ -1,6 +1,15 @@
 # Level-up Learning App
 
 
+# Level-up Learning App
+
+![Flutter](https://img.shields.io/badge/Flutter-v3.0+-blue)
+![Dart](https://img.shields.io/badge/Dart-3.0+-blue)
+![Firebase](https://img.shields.io/badge/Firebase-Enabled-orange)
+![License: MIT](https://img.shields.io/badge/License-MIT-green)
+
+
+
 ## Project Overview
 
 **Project Name**: Level-up  
@@ -45,6 +54,9 @@ The Level-up app will include the following core features, designed to align wit
 lib/                                                                                                                       
 ├── theme/                                                                                                    
 │ └── app_theme.dart                                                                                             
+├── models/                                                                                                                  
+| ├── course_model.dart                                                                                                   
+| └── user_model.dart                                                                                                          
 ├── pages/                                                                                                          
 │ ├── CourseDetailPage.dart                                                                                     
 │ ├── bottom_nav.dart                                                                                             
@@ -55,9 +67,6 @@ lib/
 │ ├── progress_page.dart                                                                                            
 │ ├── register.dart                                                                                                 
 │ └── splash_screen.dart                                                                                                  
-├── models/                                                                                                                  
-| ├── user_model.dart                                                                                                   
-| └── course_model.dart                                                                                                           
 ├── services/                                                                                                        
 | ├── auth_service.dart                                                                                                         
 | └── firestore_service.dart                                                                                                  
