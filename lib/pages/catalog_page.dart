@@ -3,6 +3,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:excelerate_intern_app/widgets/course_card.dart';
 import 'package:excelerate_intern_app/pages/CourseDetailPage.dart';
 
+/// CatalogPage — Displays a searchable, categorized list of all available courses.
+/// Integrates Firestore to fetch live course data and provides navigation to detailed course pages.
 class CatalogPage extends StatefulWidget {
   const CatalogPage({super.key});
 
@@ -11,19 +13,22 @@ class CatalogPage extends StatefulWidget {
 }
 
 class _CatalogPageState extends State<CatalogPage> {
-  bool visibleSearch = false;
-  String searchQuery = '';
-  String selectedCategory = 'All';
+  bool visibleSearch = false; // Toggles visibility of search bar
+  String searchQuery = '';    // Stores current search text input
+  String selectedCategory = 'All'; // Tracks selected course category
 
+  // List of available course categories (for filtering)
   List<String> get categories => ['All', 'Mobile', 'Backend', 'Frontend'];
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      // ---------- App Bar ----------
       appBar: AppBar(
         title: const Text('Catalog'),
         centerTitle: true,
         actions: [
+          // Search icon — toggles visibility of search bar
           IconButton(
             onPressed: () => setState(() => visibleSearch = !visibleSearch),
             icon: const Icon(Icons.search),
@@ -31,10 +36,11 @@ class _CatalogPageState extends State<CatalogPage> {
         ],
       ),
 
+      // ---------- Main Content ----------
       body: SingleChildScrollView(
         child: Column(
           children: [
-            // 🔍 Search bar
+            // 🔍 Search Bar (Animated show/hide)
             AnimatedSwitcher(
               duration: const Duration(milliseconds: 250),
               child: visibleSearch
@@ -49,6 +55,7 @@ class _CatalogPageState extends State<CatalogPage> {
                           suffixIcon: IconButton(
                             icon: const Icon(Icons.clear),
                             onPressed: () {
+                              // Clear text and hide search bar
                               setState(() {
                                 searchQuery = '';
                                 visibleSearch = false;
@@ -70,7 +77,7 @@ class _CatalogPageState extends State<CatalogPage> {
                   : const SizedBox(height: 20, key: ValueKey('emptySpace')),
             ),
 
-            // 🗂 Category filter
+            // 🗂 Category Filter (Horizontal scroll)
             Container(
               height: 40,
               padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -102,6 +109,7 @@ class _CatalogPageState extends State<CatalogPage> {
                   .collection('courses')
                   .snapshots(),
               builder: (context, snapshot) {
+                // Show loading spinner while data is loading
                 if (snapshot.connectionState == ConnectionState.waiting) {
                   return const Padding(
                     padding: EdgeInsets.all(40),
@@ -109,11 +117,12 @@ class _CatalogPageState extends State<CatalogPage> {
                   );
                 }
 
+                // Handle case when no data is available
                 if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
                   return const Center(child: Text('No courses found'));
                 }
 
-                // Parse Firestore data
+                // Parse Firestore data into a list of course maps
                 List<Map<String, dynamic>> allCourses = snapshot.data!.docs.map(
                   (doc) {
                     return {
@@ -123,25 +132,27 @@ class _CatalogPageState extends State<CatalogPage> {
                   },
                 ).toList();
 
-                // Separate featured courses
+                // 🌟 Separate Featured Courses
                 final featuredCourses = allCourses
                     .where((course) => course['isFeatured'] == true)
                     .toList();
 
-                // Apply search filter
+                // 🔍 Apply Search & Category Filters
                 List<Map<String, dynamic>> filteredCourses = allCourses.where((
                   course,
                 ) {
+                  // Check search match
                   final matchesSearch =
                       searchQuery.isEmpty ||
                       (course['title'] ?? '').toString().toLowerCase().contains(
-                        searchQuery.toLowerCase(),
-                      ) ||
+                            searchQuery.toLowerCase(),
+                          ) ||
                       (course['subtitle'] ?? '')
                           .toString()
                           .toLowerCase()
                           .contains(searchQuery.toLowerCase());
 
+                  // Check category match
                   final matchesCategory =
                       selectedCategory == 'All' ||
                       (course['category'] ?? '') == selectedCategory;
@@ -149,10 +160,11 @@ class _CatalogPageState extends State<CatalogPage> {
                   return matchesSearch && matchesCategory;
                 }).toList();
 
+                // ---------- Course List Display ----------
                 return Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    // 🌟 Featured Courses (only if not searching)
+                    // 🌟 Featured Courses (Only show when no search active)
                     if (searchQuery.isEmpty && featuredCourses.isNotEmpty)
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -182,12 +194,14 @@ class _CatalogPageState extends State<CatalogPage> {
                                     padding: const EdgeInsets.only(right: 12),
                                     child: SizedBox(
                                       height: 200,
+                                      // CourseCard widget — reusable course UI component
                                       child: CourseCard(
                                         title: course['title'] ?? 'Untitled',
                                         subtitle: course['subtitle'] ?? '',
                                         imageUrl: course['imageUrl'] ?? '',
                                         isVerticalLayout: true,
                                         onTap: () {
+                                          // Navigate to detailed course page with fade animation
                                           Navigator.of(context).push(
                                             PageRouteBuilder(
                                               transitionDuration:
@@ -217,7 +231,7 @@ class _CatalogPageState extends State<CatalogPage> {
                         ],
                       ),
 
-                    // 📚 All Courses (Vertical list)
+                    // 📚 All Courses (Vertical List)
                     const Padding(
                       padding: EdgeInsets.symmetric(
                         horizontal: 16,
@@ -232,6 +246,7 @@ class _CatalogPageState extends State<CatalogPage> {
                       ),
                     ),
 
+                    // Show message if no filtered results
                     if (filteredCourses.isEmpty)
                       const Center(
                         child: Padding(
@@ -240,6 +255,7 @@ class _CatalogPageState extends State<CatalogPage> {
                         ),
                       )
                     else
+                      // Display list of filtered courses vertically
                       ListView.builder(
                         itemCount: filteredCourses.length,
                         physics: const NeverScrollableScrollPhysics(),
@@ -259,6 +275,7 @@ class _CatalogPageState extends State<CatalogPage> {
                                 imageUrl: course['imageUrl'] ?? '',
                                 isVerticalLayout: false,
                                 onTap: () {
+                                  // Navigate to detailed course page
                                   Navigator.of(context).push(
                                     PageRouteBuilder(
                                       transitionDuration: const Duration(
