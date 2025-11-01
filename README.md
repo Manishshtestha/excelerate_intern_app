@@ -3,7 +3,7 @@
 
 # Level-up Learning App
 
-![Flutter](https://img.shields.io/badge/Flutter-v3.0+-blue)
+![Flutter](https://img.shields.io/badge/Flutter-v3.0+-blue) 
 ![Dart](https://img.shields.io/badge/Dart-3.0+-blue)
 ![Firebase](https://img.shields.io/badge/Firebase-Enabled-orange)
 ![License: MIT](https://img.shields.io/badge/License-MIT-green)
