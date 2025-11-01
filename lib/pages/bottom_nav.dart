@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 
 // A StatefulWidget that manages bottom navigation between pages
 class BottomNav extends StatefulWidget {
-  const BottomNav({super.key});
+  const BottomNav({super.key}); 
  
   @override
   State<BottomNav> createState() => _BottomNavState();
