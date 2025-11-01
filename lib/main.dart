@@ -9,54 +9,61 @@ import 'package:excelerate_intern_app/pages/CourseDetailPage.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-
 import 'Theme/app_theme.dart';
 
-// The entry point of the Flutter app
+/// Entry point of the Flutter application.
+/// Ensures Firebase is initialized before the app starts.
 void main() async {
-  WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp(); // Ensure Firebase is initialized
-  runApp(const MyApp());
+  WidgetsFlutterBinding.ensureInitialized(); // Ensures Flutter engine is ready
+  await Firebase.initializeApp(); // Initializes Firebase for authentication and database access
+  runApp(const MyApp()); // Launches the root widget of the app
 }
 
-// Root widget of the application
+/// Root widget of the application.
+/// Defines theme, routes, and initial navigation flow.
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      theme: AppTheme.lightTheme, // The theme for the app,
-      // The first screen shown when the app starts
+      // Defines the global theme for the app
+      theme: AppTheme.lightTheme,
+
+      // Initial screen displayed on app launch
       home: const AuthWrapper(),
 
-      // Removes the debug banner from the top-right corner
+      // Removes the debug banner (visible during development)
       debugShowCheckedModeBanner: false,
 
-      // Defines all named routes for easy navigation throughout the app
+      // Defines all named routes used throughout the app
       routes: {
-        '/login': (context) => const LoginPage(), // Login screen route
-        '/register': (context) =>
-            const RegisterPage(), // Registration screen route
-        '/bottomnav': (context) =>
-            const BottomNav(), // Main bottom navigation screen
-        '/catalog': (context) =>
-            const CatalogPage(), // Course catalog or list screen
-        '/progress': (context) =>
-            const ProgressPage(), // User progress tracking page
-        '/profile': (context) => const ProfilePage(), // User profile screen
+        '/login': (context) => const LoginPage(), // Login screen
+        '/register': (context) => const RegisterPage(), // Registration screen
+        '/bottomnav': (context) => const BottomNav(), // Main navigation screen
+        '/catalog': (context) => const CatalogPage(), // Course catalog
+        '/progress': (context) => const ProgressPage(), // Progress tracking page
+        '/profile': (context) => const ProfilePage(), // User profile page
+
+        // Course detail page with arguments passed via Navigator
         '/course-detail': (context) {
           final course =
-              ModalRoute.of(context)?.settings.arguments
-                  as Map<String, dynamic>?;
-          return CourseDetailPage(course: course ?? {}); // Course detail page
+              ModalRoute.of(context)?.settings.arguments as Map<String, dynamic>?;
+          return CourseDetailPage(course: course ?? {});
         },
       },
     );
   }
 }
 
-// Wrapper widget to handle authentication state
+/// A wrapper widget that decides which screen to display
+/// based on user authentication state.
+///
+/// - Shows splash screen for a fixed duration.
+/// - Checks Firebase authentication status.
+/// - Redirects to appropriate screen:
+///   - `BottomNav` if user is logged in.
+///   - `LoginPage` if user is logged out.
 class AuthWrapper extends StatefulWidget {
   const AuthWrapper({super.key});
 
@@ -65,13 +72,13 @@ class AuthWrapper extends StatefulWidget {
 }
 
 class _AuthWrapperState extends State<AuthWrapper> {
-  bool _isSplashComplete = false;
+  bool _isSplashComplete = false; // Tracks if splash screen duration is completed
 
   @override
   void initState() {
     super.initState();
 
-    // Show splash screen for a fixed duration (e.g., 2 seconds)
+    // Display splash screen for 6 seconds before checking auth state
     Future.delayed(const Duration(seconds: 6), () {
       if (mounted) {
         setState(() {
@@ -83,20 +90,21 @@ class _AuthWrapperState extends State<AuthWrapper> {
 
   @override
   Widget build(BuildContext context) {
-    // Show splash screen for a fixed duration, then move to auth state check
+    // If splash screen duration not complete, show splash screen
     if (!_isSplashComplete) {
-      return const SplashScreen(); // Show splash screen for 2 seconds
+      return const SplashScreen();
     }
 
+    // Listen to Firebase authentication state changes
     return StreamBuilder<User?>(
       stream: FirebaseAuth.instance.authStateChanges(),
       builder: (context, snapshot) {
-        // Show splash screen while checking authentication
+        // While checking authentication, show splash screen
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return const SplashScreen(); // Splash during auth check
+          return const SplashScreen();
         }
 
-        // Handle errors
+        // Display error screen if authentication check fails
         if (snapshot.hasError) {
           return Scaffold(
             body: Center(
@@ -105,13 +113,16 @@ class _AuthWrapperState extends State<AuthWrapper> {
                 children: [
                   const Icon(Icons.error, size: 64, color: Colors.red),
                   const SizedBox(height: 16),
-                  const Text('Authentication Error'),
+                  const Text(
+                    'Authentication Error',
+                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                  ),
                   const SizedBox(height: 8),
-                  Text(snapshot.error.toString()),
+                  Text(snapshot.error.toString(), textAlign: TextAlign.center),
                   const SizedBox(height: 16),
                   ElevatedButton(
                     onPressed: () {
-                      // Restart the app or handle error
+                      // Redirect user to login screen in case of error
                       Navigator.pushReplacementNamed(context, '/login');
                     },
                     child: const Text('Go to Login'),
@@ -122,13 +133,13 @@ class _AuthWrapperState extends State<AuthWrapper> {
           );
         }
 
-        // If user is logged in, show main app
+        // If user is logged in, navigate to the main app screen
         if (snapshot.hasData && snapshot.data != null) {
-          return const BottomNav(); // Main app if logged in
+          return const BottomNav();
         }
 
-        // If user is not logged in, show login screen
-        return const LoginPage(); // Login screen if not logged in
+        // If no user is logged in, show login screen
+        return const LoginPage();
       },
     );
   }
