@@ -220,3 +220,96 @@ class _FeedbackScreenState extends State<FeedbackScreen> {
                 'Your Feedback',
                 style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
               ),
+              const SizedBox(height: 12),
+
+              TextField(
+                controller: _feedbackController,
+                maxLines: 4,
+                decoration: InputDecoration(
+                  hintText: 'Write your comments here...',
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                ),
+              ),
+
+              const SizedBox(height: 24),
+
+// --- Submit Button ---
+              Center(
+                child: ElevatedBtn(
+                  text: 'Submit Feedback',
+                  onPressed: () {
+                    // handle feedback submission logic here
+                    print('Rating: $selectedRating');
+                    print('Category: $selectedCategory');
+                    print('Feedback: ${_feedbackController.text}');
+                  },
+                ),
+              ),
+
+              const SizedBox(height: 32),
+
+// --- Previous Feedback Section ---
+              const Text(
+                'Other Students\' Feedback',
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+              ),
+              const SizedBox(height: 12),
+
+              Column(
+                children: previousFeedback.map((fb) {
+                  return Card(
+                    margin: const EdgeInsets.only(bottom: 12),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: ListTile(
+                      title: Text(fb['user']),
+                      subtitle: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Row(
+                            children: List.generate(5, (index) {
+                              return Icon(
+                                index < fb['rating'] ? Icons.star : Icons.star_border,
+                                color: Colors.amber,
+                                size: 18,
+                              );
+                            }),
+                          ),
+                          Text(fb['comment']),
+                          Text(
+                            '${fb['category']} • ${fb['date']}',
+                            style: TextStyle(color: Colors.grey[600], fontSize: 12),
+                          ),
+                        ],
+                      ),
+                    ),
+                  );
+                }).toList(),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  String _getRatingText(int rating) {
+    switch (rating) {
+      case 1:
+        return 'Poor';
+      case 2:
+        return 'Fair';
+      case 3:
+        return 'Good';
+      case 4:
+        return 'Very Good';
+      case 5:
+        return 'Excellent!';
+      default:
+        return '';
+    }
+  }
+}
